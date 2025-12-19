@@ -3,20 +3,51 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
+    "prepare": "husky",
     "dev": "turbo run dev",
     "build": "turbo run build",
     "lint": "turbo run lint",
+    "lint:fix": "turbo run lint -- --fix",
     "format": "prettier --write \"**/*.{ts,tsx,md,json}\"",
-    "type-check": "turbo run type-check"
+    "format:check": "prettier --check \"**/*.{ts,tsx,md,json}\"",
+    "type-check": "turbo run type-check",
+    "clean": "turbo run clean && rm -rf node_modules",
+    "clean:cache": "rm -rf .turbo"
   },
   "devDependencies": {
+    "@commitlint/cli": "^20.2.0",
+    "@commitlint/config-conventional": "^20.2.0",
+    "@eslint/js": "^9.39.2",
+    "globals": "^16.5.0",
+    "husky": "^9.1.7",
+    "lint-staged": "^16.2.7",
     "prettier": "^3.0.0",
     "turbo": "^1.10.0",
-    "typescript": "^5.2.0"
+    "typescript": "^5.2.0",
+    "typescript-eslint": "^8.50.0"
   },
   "packageManager": "pnpm@8.10.0",
+  "pnpm": {
+    "overrides": {},
+    "peerDependencyRules": {
+      "ignoreMissing": []
+    }
+  },
   "engines": {
     "node": ">=18.0.0",
     "pnpm": ">=8.0.0"
+  },
+  "lint-staged": {
+    "apps/frontend/**/*.{ts,tsx,js,jsx}": [
+      "cd apps/frontend && eslint --fix",
+      "prettier --write"
+    ],
+    "*.{ts,tsx,js,jsx}": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "*.{json,md,yml,yaml}": [
+      "prettier --write"
+    ]
   }
 }
