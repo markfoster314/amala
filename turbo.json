@@ -1,20 +1,96 @@
 {
   "$schema": "https://turbo.build/schema.json",
-  "globalDependencies": ["**/.env.*local"],
+  "globalDependencies": [
+    "**/.env.*local",
+    "**/.env",
+    "tsconfig.json",
+    "package.json",
+    "pnpm-lock.yaml",
+    "turbo.json"
+  ],
+  "globalEnv": ["NODE_ENV", "CI"],
   "pipeline": {
     "build": {
       "dependsOn": ["^build"],
-      "outputs": ["dist/**", ".next/**", "build/**"]
+      "outputs": [
+        "dist/**",
+        ".next/**",
+        "build/**",
+        "!.next/cache/**",
+        "!.turbo/**"
+      ],
+      "env": ["NODE_ENV", "VITE_API_URL", "VITE_APP_NAME"],
+      "cache": true
     },
     "dev": {
       "cache": false,
-      "persistent": true
+      "persistent": true,
+      "env": ["NODE_ENV", "VITE_API_URL", "VITE_APP_NAME"]
     },
     "lint": {
-      "dependsOn": ["^lint"]
+      "dependsOn": ["^lint"],
+      "outputs": [],
+      "cache": true,
+      "inputs": [
+        "**/*.{ts,tsx,js,jsx}",
+        ".eslintrc*",
+        "eslint.config.*",
+        "package.json"
+      ]
+    },
+    "lint:fix": {
+      "dependsOn": ["^lint"],
+      "outputs": [],
+      "cache": false
     },
     "type-check": {
-      "dependsOn": ["^type-check"]
+      "dependsOn": ["^type-check"],
+      "outputs": [],
+      "cache": true,
+      "inputs": [
+        "**/*.{ts,tsx}",
+        "tsconfig.json",
+        "tsconfig.*.json",
+        "package.json"
+      ]
+    },
+    "format": {
+      "outputs": [],
+      "cache": false
+    },
+    "format:check": {
+      "outputs": [],
+      "cache": true,
+      "inputs": [
+        "**/*.{ts,tsx,js,jsx,json,md,yml,yaml}",
+        ".prettierrc*",
+        "prettier.config.*",
+        "package.json"
+      ]
+    },
+    "test": {
+      "dependsOn": ["^build"],
+      "outputs": ["coverage/**"],
+      "cache": true,
+      "inputs": [
+        "**/*.{ts,tsx,js,jsx}",
+        "**/*.test.{ts,tsx,js,jsx}",
+        "**/*.spec.{ts,tsx,js,jsx}",
+        "package.json"
+      ]
+    },
+    "test:watch": {
+      "cache": false,
+      "persistent": true
+    },
+    "preview": {
+      "dependsOn": ["build"],
+      "cache": false,
+      "persistent": true
+    },
+    "clean": {
+      "cache": false,
+      "outputs": []
     }
   }
 }
