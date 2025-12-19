@@ -2,17 +2,35 @@
   "name": "amala",
   "version": "0.1.0",
   "private": true,
+  "description": "Private video file sharing service for sharing videos with friends on privately hosted servers",
+  "author": "",
+  "license": "UNLICENSED",
+  "keywords": [
+    "video-sharing",
+    "private",
+    "self-hosted",
+    "file-sharing"
+  ],
+  "repository": {
+    "type": "git",
+    "url": ""
+  },
   "scripts": {
     "prepare": "husky",
     "dev": "turbo run dev",
     "build": "turbo run build",
+    "preview": "turbo run preview",
     "lint": "turbo run lint",
     "lint:fix": "turbo run lint -- --fix",
-    "format": "prettier --write \"**/*.{ts,tsx,md,json}\"",
-    "format:check": "prettier --check \"**/*.{ts,tsx,md,json}\"",
+    "format": "prettier --write \"**/*.{ts,tsx,js,jsx,json,md,yml,yaml,css,scss}\"",
+    "format:check": "prettier --check \"**/*.{ts,tsx,js,jsx,json,md,yml,yaml,css,scss}\"",
     "type-check": "turbo run type-check",
+    "test": "turbo run test",
+    "test:watch": "turbo run test:watch",
+    "validate": "pnpm lint && pnpm type-check && pnpm format:check",
     "clean": "turbo run clean && rm -rf node_modules",
-    "clean:cache": "rm -rf .turbo"
+    "clean:cache": "rm -rf .turbo",
+    "clean:all": "pnpm clean:cache && pnpm clean"
   },
   "devDependencies": {
     "@commitlint/cli": "^20.2.0",
@@ -34,7 +52,7 @@
     }
   },
   "engines": {
-    "node": ">=18.0.0",
+    "node": ">=20.0.0",
     "pnpm": ">=8.0.0"
   },
   "lint-staged": {
