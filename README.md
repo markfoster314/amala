@@ -1,6 +1,6 @@
 # Amala
 
-> A decentralized video file sharing network for private groups. Think Limewire, but for video files—with invite-only groups similar to Discord servers.
+> A decentralized video file sharing network for private groups. Think Limewire, but for video files with invite-only groups similar to Discord servers.
 
 ![Amala Network](internals/smt3.jpg)
 
@@ -14,7 +14,7 @@
 
 Amala is an open-source, self-hosted video sharing platform that enables private groups to share video files with each other. Whether you're sharing family videos, anime collections, or movies from various sources, Amala gives you control over your content without ads, tracking, or corporate oversight.
 
-The name "Amala" comes from the **Amala Network** in _Shin Megami Tensei III: Nocturne_—a vast interconnected system that channels information and enables rapid communication between terminals. Like its namesake, Amala creates an interconnected network of servers and groups, allowing secure video sharing between trusted communities.
+The name "Amala" comes from the **Amala Network** in _Shin Megami Tensei III: Nocturne_ a vast interconnected system that channels information and enables rapid communication between terminals. Like its namesake, Amala creates an interconnected network of servers and groups, allowing secure video sharing between trusted communities.
 
 ### The Vision
 
@@ -27,7 +27,7 @@ We're tired of ads, broken servers, and losing access to content we love. Amala 
 - **Decentralized**: No single point of failure or corporate control
 - **No Ads**: Your content, your rules, zero advertising
 - **Secure**: Videos stay within your infrastructure and trusted groups
-- **Open Source**: MIT licensed—transparent, auditable, and community-driven
+- **Open Source**: MIT licensed transparent, auditable, and community-driven
 
 ## Use Cases
 
