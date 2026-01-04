@@ -4,7 +4,7 @@
   "private": true,
   "description": "Private video file sharing service for sharing videos with friends on privately hosted servers",
   "author": "",
-  "license": "UNLICENSED",
+  "license": "MIT",
   "keywords": [
     "video-sharing",
     "private",
@@ -13,8 +13,12 @@
   ],
   "repository": {
     "type": "git",
-    "url": ""
+    "url": "https://github.com/markfoster314/amala.git"
   },
+  "bugs": {
+    "url": "https://github.com/markfoster314/amala/issues"
+  },
+  "homepage": "https://github.com/markfoster314/amala#readme",
   "scripts": {
     "prepare": "husky",
     "dev": "turbo run dev",
