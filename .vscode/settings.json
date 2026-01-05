@@ -7,8 +7,7 @@
   "typescript.tsdk": "node_modules/typescript/lib",
   "typescript.enablePromptUseWorkspaceTsdk": true,
   "files.exclude": {
-    "**/.turbo": true,
-    "**/node_modules": true
+    "**/.turbo": true
   },
   "search.exclude": {
     "**/node_modules": true,

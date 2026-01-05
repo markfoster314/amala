@@ -16,6 +16,7 @@ export default tseslint.config(
       'coverage',
       'public',
       '*.d.ts',
+      '**/*.test.{ts,tsx}',
     ],
   },
   {

@@ -1,0 +1,9 @@
+.footer-amala {
+  margin-top: auto; /* Push footer to bottom */
+  padding-top: 1rem; /* Add spacing above footer */
+  padding-bottom: 1rem; /* Add spacing below footer */
+  border-top: 1px solid var(--marduk-color-gray-600);
+  color: white;
+  text-align: center;
+  width: 100%;
+}
