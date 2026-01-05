@@ -6,7 +6,7 @@ import NotFound from './components/common/NotFound';
 
 // Lazy load pages for code splitting
 const HomePage = lazy(() => import('./pages/HomePage/HomePage'));
-const AuthPage = lazy(() => import('./pages/AuthPage'));
+const AuthPage = lazy(() => import('./pages/AuthPage/AuthPage'));
 
 function App() {
   return (

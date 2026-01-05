@@ -3,13 +3,13 @@ import { Svg } from '@markfoster314/marduk';
 export interface LogoSvgProps {
   align?: 'left' | 'center' | 'right';
   className?: string;
-  animation?: 'heartpulse';
+  animation?: 'heartpulse' | 'none';
   size?: number;
 }
 
 export const LogoSvg = ({
   size = 160,
-  animation,
+  animation = 'none',
   className,
   align = 'center',
   ...props
@@ -18,7 +18,7 @@ export const LogoSvg = ({
     <Svg
       viewBox="0 0 127.5 127.5"
       className={className}
-      animation={animation}
+      animation={animation === 'none' ? undefined : animation}
       size={size}
       align={align}
       responsive={true}

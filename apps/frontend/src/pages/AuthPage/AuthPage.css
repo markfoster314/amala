@@ -1,0 +1,123 @@
+.auth-page {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  width: 100vw;
+}
+
+.auth-card {
+  position: relative;
+  background-color: var(--marduk-color-gray-800, #1f2937);
+  border-radius: 1rem;
+  padding: 3rem 2rem 2rem;
+  max-width: 420px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.auth-logo {
+  position: absolute;
+  top: -60px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.auth-content {
+  margin-top: 2rem;
+}
+
+.auth-form h2 {
+  color: var(--marduk-color-white, #ffffff);
+  text-align: center;
+  margin: 0 0 2rem;
+  font-size: 1.75rem;
+  font-weight: 600;
+}
+
+.form-group {
+  margin-bottom: 1.5rem;
+}
+
+.form-group label {
+  display: block;
+  color: var(--marduk-color-gray-300, #d1d5db);
+  margin-bottom: 0.5rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 0.75rem;
+  background-color: var(--marduk-color-gray-700, #374151);
+  border: 1px solid var(--marduk-color-gray-600, #4b5563);
+  border-radius: 0.5rem;
+  color: var(--marduk-color-white, #ffffff);
+  font-size: 1rem;
+  box-sizing: border-box;
+}
+
+.form-group input:focus {
+  outline: none;
+  border-color: var(--marduk-color-blue-500, #3b82f6);
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.form-group input::placeholder {
+  color: var(--marduk-color-gray-400, #9ca3af);
+}
+
+.auth-button {
+  width: 100%;
+  padding: 0.75rem;
+  background-color: var(--marduk-color-blue-600, #2563eb);
+  color: var(--marduk-color-white, #ffffff);
+  border: none;
+  border-radius: 0.5rem;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: 1rem;
+  transition: background-color 0.2s;
+}
+
+.auth-button:hover {
+  background-color: var(--marduk-color-blue-700, #1d4ed8);
+}
+
+.auth-button:active {
+  background-color: var(--marduk-color-blue-800, #1e40af);
+}
+
+.auth-links {
+  margin-top: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  align-items: center;
+}
+
+.link-button {
+  background: none;
+  border: none;
+  color: var(--marduk-color-blue-400, #60a5fa);
+  font-size: 0.875rem;
+  cursor: pointer;
+  padding: 0.25rem;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  transition: color 0.2s;
+}
+
+.link-button:hover {
+  color: var(--marduk-color-blue-300, #93c5fd);
+}
+
+.link-button:active {
+  color: var(--marduk-color-blue-500, #3b82f6);
+}
