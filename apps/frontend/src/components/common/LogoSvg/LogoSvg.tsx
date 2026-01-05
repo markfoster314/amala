@@ -1,9 +1,9 @@
-import { Svg } from "@markfoster314/marduk";
+import { Svg } from '@markfoster314/marduk';
 
 export interface LogoSvgProps {
-  align?: "left" | "center" | "right";
+  align?: 'left' | 'center' | 'right';
   className?: string;
-  animation?: "heartpulse";
+  animation?: 'heartpulse';
   size?: number;
 }
 
@@ -11,7 +11,7 @@ export const LogoSvg = ({
   size = 160,
   animation,
   className,
-  align = "center",
+  align = 'center',
   ...props
 }: LogoSvgProps) => {
   return (
