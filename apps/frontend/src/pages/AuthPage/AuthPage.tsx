@@ -1,148 +1,146 @@
 import { useState } from 'react';
 import { LogoSvg } from '@/components/common/LogoSvg/LogoSvg';
 import './AuthPage.css';
-import { Box, Title } from '@markfoster314/marduk';
+import { Box, type TextInputProps } from '@markfoster314/marduk';
+import {
+  AuthFormTemplate,
+  type AuthFormField,
+  type AuthFormLink,
+} from './AuthFormTemplate';
 
 type AuthState = 'signin' | 'signup' | 'recovery';
 
 export default function AuthPage() {
   const [authState, setAuthState] = useState<AuthState>('signin');
 
+  const signinFields: AuthFormField[] = [
+    {
+      id: 'signin-email',
+      name: 'email',
+      type: 'email' as TextInputProps['type'],
+      label: 'Email',
+      required: true,
+    },
+    {
+      id: 'signin-password',
+      name: 'password',
+      type: 'password' as TextInputProps['type'],
+      label: 'Password',
+      required: true,
+    },
+  ];
+
+  const signinLinks: AuthFormLink[] = [
+    {
+      text: 'Forgot password?',
+      onClick: () => setAuthState('recovery'),
+    },
+    {
+      text: "Don't have an account? Sign up",
+      onClick: () => setAuthState('signup'),
+    },
+  ];
+
+  const signupFields: AuthFormField[] = [
+    {
+      id: 'signup-email',
+      name: 'email',
+      type: 'email' as TextInputProps['type'],
+      label: 'Email',
+      required: true,
+    },
+    {
+      id: 'signup-password',
+      name: 'password',
+      type: 'password' as TextInputProps['type'],
+      label: 'Password',
+      required: true,
+    },
+    {
+      id: 'signup-confirm-password',
+      name: 'confirmPassword',
+      type: 'password' as TextInputProps['type'],
+      label: 'Confirm Password',
+      required: true,
+    },
+  ];
+
+  const signupLinks: AuthFormLink[] = [
+    {
+      text: 'Already have an account? Sign in',
+      onClick: () => setAuthState('signin'),
+    },
+  ];
+
+  const recoveryFields: AuthFormField[] = [
+    {
+      id: 'recovery-code',
+      name: 'recoveryCode',
+      type: 'text' as TextInputProps['type'],
+      label: 'Recovery Code',
+      placeholder: 'Enter your recovery code',
+      required: true,
+    },
+  ];
+
+  const recoveryLinks: AuthFormLink[] = [
+    {
+      text: 'Back to Sign In',
+      onClick: () => setAuthState('signin'),
+    },
+  ];
+
+  const handleSignIn = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    // Handle sign in
+  };
+
+  const handleSignUp = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    // Handle sign up
+  };
+
+  const handleRecovery = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    // Handle recovery code
+  };
+
   return (
     <Box className="auth-page">
       <Box className="auth-card">
         <Box className="auth-logo">
-          <LogoSvg animation="none" size={120} />
+          <LogoSvg animation="none" size={80} />
         </Box>
 
         <Box className="auth-content">
           {authState === 'signin' && (
-            <Box className="auth-form">
-              <Title level={2}>Sign In</Title>
-              <form
-                onSubmit={(e) => {
-                  e.preventDefault();
-                  // Handle sign in
-                }}
-              >
-                <Box className="form-group">
-                  <label htmlFor="signin-email">Email</label>
-                  <input type="email" id="signin-email" name="email" required />
-                </Box>
-                <Box className="form-group">
-                  <label htmlFor="signin-password">Password</label>
-                  <input
-                    type="password"
-                    id="signin-password"
-                    name="password"
-                    required
-                  />
-                </Box>
-                <button type="submit" className="auth-button">
-                  Sign In
-                </button>
-              </form>
-              <Box className="auth-links">
-                <button
-                  type="button"
-                  className="link-button"
-                  onClick={() => setAuthState('recovery')}
-                >
-                  Forgot password?
-                </button>
-                <button
-                  type="button"
-                  className="link-button"
-                  onClick={() => setAuthState('signup')}
-                >
-                  Don't have an account? Sign up
-                </button>
-              </Box>
-            </Box>
+            <AuthFormTemplate
+              title="Sign In"
+              fields={signinFields}
+              submitButtonText="Sign In"
+              links={signinLinks}
+              onSubmit={handleSignIn}
+            />
           )}
 
           {authState === 'signup' && (
-            <Box className="auth-form">
-              <Title level={2}>Sign Up</Title>
-              <form
-                onSubmit={(e) => {
-                  e.preventDefault();
-                  // Handle sign up
-                }}
-              >
-                <Box className="form-group">
-                  <label htmlFor="signup-email">Email</label>
-                  <input type="email" id="signup-email" name="email" required />
-                </Box>
-                <Box className="form-group">
-                  <label htmlFor="signup-password">Password</label>
-                  <input
-                    type="password"
-                    id="signup-password"
-                    name="password"
-                    required
-                  />
-                </Box>
-                <Box className="form-group">
-                  <label htmlFor="signup-confirm-password">
-                    Confirm Password
-                  </label>
-                  <input
-                    type="password"
-                    id="signup-confirm-password"
-                    name="confirmPassword"
-                    required
-                  />
-                </Box>
-                <button type="submit" className="auth-button">
-                  Sign Up
-                </button>
-              </form>
-              <Box className="auth-links">
-                <button
-                  type="button"
-                  className="link-button"
-                  onClick={() => setAuthState('signin')}
-                >
-                  Already have an account? Sign in
-                </button>
-              </Box>
-            </Box>
+            <AuthFormTemplate
+              title="Sign Up"
+              fields={signupFields}
+              submitButtonText="Sign Up"
+              links={signupLinks}
+              onSubmit={handleSignUp}
+            />
           )}
 
           {authState === 'recovery' && (
-            <Box className="auth-form">
-              <Title level={2}>Recovery Code</Title>
-              <form
-                onSubmit={(e) => {
-                  e.preventDefault();
-                  // Handle recovery code
-                }}
-              >
-                <Box className="form-group">
-                  <label htmlFor="recovery-code">Recovery Code</label>
-                  <input
-                    type="text"
-                    id="recovery-code"
-                    name="recoveryCode"
-                    placeholder="Enter your recovery code"
-                    required
-                  />
-                </Box>
-                <button type="submit" className="auth-button">
-                  Verify Code
-                </button>
-              </form>
-              <Box className="auth-links">
-                <button
-                  type="button"
-                  className="link-button"
-                  onClick={() => setAuthState('signin')}
-                >
-                  Back to Sign In
-                </button>
-              </Box>
-            </Box>
+            <AuthFormTemplate
+              title="Recovery Code"
+              fields={recoveryFields}
+              submitButtonText="Verify Code"
+              links={recoveryLinks}
+              onSubmit={handleRecovery}
+            />
           )}
         </Box>
       </Box>
