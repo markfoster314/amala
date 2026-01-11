@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Box, TextInput, Button } from '@markfoster314/marduk';
 import { LogoSvg } from '@/components/common/LogoSvg/LogoSvg';
@@ -5,6 +6,7 @@ import './Navbar.css';
 
 export default function Navbar() {
   const navigate = useNavigate();
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   return (
     <Box className="navbar-container">
@@ -60,6 +62,53 @@ export default function Navbar() {
             Profile
           </Button>
         </Box>
+
+        {/* Hamburger menu button (mobile only) */}
+        <button
+          type="button"
+          className="navbar-hamburger"
+          onClick={() => {
+            setIsMenuOpen(!isMenuOpen);
+          }}
+          aria-label="Toggle menu"
+          aria-expanded={isMenuOpen}
+        >
+          <span className="hamburger-line"></span>
+          <span className="hamburger-line"></span>
+          <span className="hamburger-line"></span>
+        </button>
+      </Box>
+
+      {/* Mobile menu dropdown - always rendered, controlled by CSS */}
+      <Box
+        className={`navbar-mobile-menu ${
+          isMenuOpen ? 'navbar-mobile-menu-open' : ''
+        }`}
+      >
+        <Button
+          preset={['secondaryDark']}
+          appearance="text"
+          onClick={() => {
+            // eslint-disable-next-line no-void
+            void navigate('/dashboard');
+            setIsMenuOpen(false);
+          }}
+          className="navbar-mobile-link"
+        >
+          Dashboard
+        </Button>
+        <Button
+          preset={['secondaryDark']}
+          appearance="text"
+          onClick={() => {
+            // eslint-disable-next-line no-void
+            void navigate('/profile');
+            setIsMenuOpen(false);
+          }}
+          className="navbar-mobile-link"
+        >
+          Profile
+        </Button>
       </Box>
     </Box>
   );

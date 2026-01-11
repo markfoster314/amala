@@ -29,6 +29,9 @@ body {
   min-width: 320px;
   min-height: 100vh;
   background-color: #0f0a1a;
+  overflow-x: hidden;
+  width: 100%;
+  max-width: 100vw;
 }
 
 /* h1 {

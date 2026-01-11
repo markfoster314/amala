@@ -86,3 +86,106 @@
 .navbar-link {
   white-space: nowrap;
 }
+
+/* Hamburger menu button (hidden on desktop) */
+.navbar-hamburger {
+  display: none;
+  flex-direction: column;
+  justify-content: space-around;
+  width: 2rem;
+  height: 2rem;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  z-index: 10;
+}
+
+.navbar-hamburger:focus {
+  outline: 2px solid var(--marduk-color-blue-500, #4299e1);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+.hamburger-line {
+  width: 2rem;
+  height: 0.25rem;
+  background-color: var(--marduk-color-gray-300, #d1d5db);
+  border-radius: 10px;
+  transition: all 0.3s linear;
+  position: relative;
+  transform-origin: 1px;
+}
+
+.navbar-hamburger[aria-expanded='true'] .hamburger-line:first-child {
+  transform: rotate(45deg);
+}
+
+.navbar-hamburger[aria-expanded='true'] .hamburger-line:nth-child(2) {
+  opacity: 0;
+  transform: translateX(20px);
+}
+
+.navbar-hamburger[aria-expanded='true'] .hamburger-line:nth-child(3) {
+  transform: rotate(-45deg);
+}
+
+/* Mobile menu dropdown */
+.navbar-mobile-menu {
+  flex-direction: column;
+  padding: 0 1rem; /* Start with 0 padding, will expand */
+  gap: 0.5rem;
+  border-top: 1px solid var(--marduk-color-gray-600, rgba(255, 255, 255, 0.1));
+  background-color: var(--marduk-color-gray-900, #0f0a1a);
+  max-height: 0;
+  overflow: hidden;
+  opacity: 0;
+  transition:
+    max-height 0.3s ease-in-out,
+    opacity 0.3s ease-in-out,
+    padding 0.3s ease-in-out;
+  /* Hide on desktop by default */
+  display: none;
+}
+
+.navbar-mobile-menu-open {
+  max-height: 200px; /* Adjust based on your content height */
+  opacity: 1;
+  padding: 1rem; /* Expanded padding */
+}
+
+.navbar-mobile-link {
+  width: 100%;
+  text-align: left;
+  padding: 0.75rem 0;
+}
+
+/* Mobile responsive styles */
+@media (max-width: 768px) {
+  .navbar-content {
+    padding: 1rem;
+    gap: 1rem;
+  }
+
+  .navbar-search {
+    flex: 1;
+    min-width: 0;
+    max-width: none;
+  }
+
+  .navbar-links {
+    display: none;
+  }
+
+  .navbar-hamburger {
+    display: flex;
+  }
+
+  .navbar-mobile-menu {
+    display: flex; /* Always displayed on mobile, just hidden with max-height */
+  }
+
+  .navbar-mobile-menu-open {
+    max-height: 200px; /* Adjust to fit your content */
+  }
+}
