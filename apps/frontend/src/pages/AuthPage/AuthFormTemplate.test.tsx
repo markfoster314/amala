@@ -1,7 +1,11 @@
 import { describe, it, expect, vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { AuthFormTemplate, type AuthFormField, type AuthFormLink } from './AuthFormTemplate';
+import {
+  AuthFormTemplate,
+  type AuthFormField,
+  type AuthFormLink,
+} from './AuthFormTemplate';
 
 describe('AuthFormTemplate', () => {
   const mockOnSubmit = vi.fn((e: React.FormEvent<HTMLFormElement>) => {
@@ -179,9 +183,12 @@ describe('AuthFormTemplate', () => {
 
     const form = container.querySelector('form') as HTMLFormElement;
     expect(form).toBeInTheDocument();
-    
+
     // Fire submit event directly on the form
-    const submitEvent = new Event('submit', { bubbles: true, cancelable: true });
+    const submitEvent = new Event('submit', {
+      bubbles: true,
+      cancelable: true,
+    });
     form.dispatchEvent(submitEvent);
 
     expect(mockOnSubmit).toHaveBeenCalledOnce();
@@ -198,10 +205,12 @@ describe('AuthFormTemplate', () => {
       />
     );
 
-    const emailInput = container.querySelector('#test-email') as HTMLInputElement;
+    const emailInput = container.querySelector(
+      '#test-email'
+    ) as HTMLInputElement;
     expect(emailInput).not.toBeNull();
     await user.type(emailInput, 'test@example.com');
-    
+
     // Press Enter in the input field
     await user.type(emailInput, '{Enter}');
 
@@ -369,10 +378,10 @@ describe('AuthFormTemplate', () => {
 
     const emailInput = container.querySelector('#email-field');
     expect(emailInput).toHaveAttribute('type', 'email');
-    
+
     const passwordInput = container.querySelector('#password-field');
     expect(passwordInput).toHaveAttribute('type', 'password');
-    
+
     const textInput = container.querySelector('#text-field');
     expect(textInput).toHaveAttribute('type', 'text');
   });
@@ -409,4 +418,3 @@ describe('AuthFormTemplate', () => {
     expect(form?.querySelector('button[type="submit"]')).toBeInTheDocument();
   });
 });
-

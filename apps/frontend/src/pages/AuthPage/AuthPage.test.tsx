@@ -39,7 +39,7 @@ vi.mock('./AuthFormTemplate', () => ({
           onSubmit(e);
         }}
       >
-        {fields.map((field: { id: string; label: string }) => (
+        {(fields as Array<{ id: string; label: string }>).map((field) => (
           <div key={field.id} data-testid={`field-${field.id}`}>
             {field.label}
           </div>
@@ -87,7 +87,9 @@ describe('AuthPage', () => {
     renderAuthPage();
     const formTemplate = screen.getByTestId('auth-form-template');
     expect(formTemplate).toHaveAttribute('data-title', 'Sign In');
-    expect(screen.getByRole('button', { name: /sign in/i, hidden: true })).toBeInTheDocument();
+    expect(
+      screen.getByRole('button', { name: /sign in/i, hidden: true })
+    ).toBeInTheDocument();
   });
 
   it('displays signin form fields by default', () => {
@@ -113,7 +115,9 @@ describe('AuthPage', () => {
 
     const formTemplate = screen.getByTestId('auth-form-template');
     expect(formTemplate).toHaveAttribute('data-title', 'Sign Up');
-    expect(screen.getByRole('button', { name: /sign up/i, hidden: true })).toBeInTheDocument();
+    expect(
+      screen.getByRole('button', { name: /sign up/i, hidden: true })
+    ).toBeInTheDocument();
   });
 
   it('displays signup form fields when switched to signup', async () => {
@@ -168,7 +172,9 @@ describe('AuthPage', () => {
 
     const formTemplate = screen.getByTestId('auth-form-template');
     expect(formTemplate).toHaveAttribute('data-title', 'Recovery Code');
-    expect(screen.getByRole('button', { name: /verify code/i, hidden: true })).toBeInTheDocument();
+    expect(
+      screen.getByRole('button', { name: /verify code/i, hidden: true })
+    ).toBeInTheDocument();
   });
 
   it('displays recovery form fields when switched to recovery', async () => {
@@ -212,7 +218,10 @@ describe('AuthPage', () => {
     const user = userEvent.setup();
     renderAuthPage();
 
-    const submitButton = screen.getByRole('button', { name: /sign in/i, hidden: true });
+    const submitButton = screen.getByRole('button', {
+      name: /sign in/i,
+      hidden: true,
+    });
     await user.click(submitButton);
 
     // The form submission should prevent default and call the handler
@@ -228,7 +237,10 @@ describe('AuthPage', () => {
     const signupLink = screen.getByText("Don't have an account? Sign up");
     await user.click(signupLink);
 
-    const submitButton = screen.getByRole('button', { name: /sign up/i, hidden: true });
+    const submitButton = screen.getByRole('button', {
+      name: /sign up/i,
+      hidden: true,
+    });
     await user.click(submitButton);
 
     expect(submitButton).toBeInTheDocument();
@@ -242,7 +254,10 @@ describe('AuthPage', () => {
     const recoveryLink = screen.getByText('Forgot password?');
     await user.click(recoveryLink);
 
-    const submitButton = screen.getByRole('button', { name: /verify code/i, hidden: true });
+    const submitButton = screen.getByRole('button', {
+      name: /verify code/i,
+      hidden: true,
+    });
     await user.click(submitButton);
 
     expect(submitButton).toBeInTheDocument();
@@ -272,12 +287,14 @@ describe('AuthPage', () => {
     expect(formTemplate).toHaveAttribute('data-title', 'Sign Up');
 
     // Switch back to signin first, then to recovery
-    const backToSigninLink = screen.getByText('Already have an account? Sign in');
+    const backToSigninLink = screen.getByText(
+      'Already have an account? Sign in'
+    );
     await user.click(backToSigninLink);
-    
+
     formTemplate = screen.getByTestId('auth-form-template');
     expect(formTemplate).toHaveAttribute('data-title', 'Sign In');
-    
+
     const recoveryLink = screen.getByText('Forgot password?');
     await user.click(recoveryLink);
 
@@ -307,4 +324,3 @@ describe('AuthPage', () => {
     expect(formTemplate).toHaveAttribute('data-title', 'Sign In');
   });
 });
-

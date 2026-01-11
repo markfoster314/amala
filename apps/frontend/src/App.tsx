@@ -2,7 +2,7 @@ import { lazy, Suspense } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Layout from './components/layout/Layout';
 import { ErrorBoundary } from './components/common/ErrorBoundary';
-import NotFound from './components/common/NotFound';
+import NotFound from './components/common/NotFound/NotFound';
 
 // Lazy load pages for code splitting
 const HomePage = lazy(() => import('./pages/HomePage/HomePage'));
