@@ -7,6 +7,7 @@ import NotFound from './components/common/NotFound/NotFound';
 // Lazy load pages for code splitting
 const HomePage = lazy(() => import('./pages/HomePage/HomePage'));
 const AuthPage = lazy(() => import('./pages/AuthPage/AuthPage'));
+const Dashboard = lazy(() => import('./pages/Dashboard/Dashboard'));
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
             <Route element={<Layout />}>
               <Route path="/" element={<HomePage />} />
               <Route path="/auth" element={<AuthPage />} />
+              <Route path="/dashboard" element={<Dashboard />} />
               <Route path="*" element={<NotFound />} />
             </Route>
           </Routes>
