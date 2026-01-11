@@ -21,7 +21,7 @@ export default function VideoCard({
 
   return (
     <Box
-      className={`video-card ${className || ''}`}
+      className={`video-card ${className ?? ''}`}
       onClick={onClick}
       role={onClick ? 'button' : undefined}
       tabIndex={onClick ? 0 : undefined}

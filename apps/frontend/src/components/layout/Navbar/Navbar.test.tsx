@@ -237,7 +237,9 @@ describe('Navbar', () => {
       const { container } = renderNavbar();
 
       const desktopLinks = container.querySelector('.navbar-links');
-      const buttons = desktopLinks?.querySelectorAll('button[data-testid="button"]');
+      const buttons = desktopLinks?.querySelectorAll(
+        'button[data-testid="button"]'
+      );
       expect(buttons).toBeDefined();
       if (buttons && buttons.length >= 2) {
         const profileButton = buttons[1]; // Second button is Profile
