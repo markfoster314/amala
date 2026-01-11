@@ -1,0 +1,57 @@
+.video-card {
+  display: flex;
+  flex-direction: column;
+  cursor: pointer;
+  transition: transform 0.2s ease, opacity 0.2s ease;
+  border-radius: 0.5rem;
+  overflow: hidden;
+  background-color: var(--marduk-color-gray-800, #1f2937);
+  max-width: 100%;
+}
+
+.video-card:hover {
+  transform: translateY(-4px);
+  opacity: 0.9;
+}
+
+.video-card-thumbnail-container {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  background-color: var(--marduk-color-gray-900, #111827);
+  overflow: hidden;
+}
+
+.video-card-thumbnail {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.video-card-progress-overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background-color: var(--marduk-color-gray-700, #374151);
+  width: 100%;
+}
+
+.video-card-progress-bar {
+  height: 100%;
+  background-color: var(--marduk-color-blue-500, #3b82f6);
+  transition: width 0.3s ease;
+  border-radius: 0 0 0 0.5rem;
+}
+
+.video-card-title {
+  padding: 0.75rem 1rem;
+  margin: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+}
