@@ -61,6 +61,12 @@
       </div>
     </noscript>
     <div id="root"></div>
+    <script>
+      // Polyfill for Node.js global object (required by amazon-cognito-identity-js)
+      if (typeof global === 'undefined') {
+        window.global = window;
+      }
+    </script>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

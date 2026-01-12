@@ -26,6 +26,7 @@ interface AuthFormTemplateProps {
   submitButtonText: string;
   links?: AuthFormLink[];
   onSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
+  isLoading?: boolean;
 }
 
 export function AuthFormTemplate({
@@ -34,6 +35,7 @@ export function AuthFormTemplate({
   submitButtonText,
   links,
   onSubmit,
+  isLoading = false,
 }: AuthFormTemplateProps) {
   return (
     <Box className="auth-form">
@@ -57,8 +59,9 @@ export function AuthFormTemplate({
           preset={['secondaryDark']}
           type="submit"
           className="auth-button"
+          disabled={isLoading}
         >
-          {submitButtonText}
+          {isLoading ? 'Loading...' : submitButtonText}
         </Button>
       </form>
       {links && links.length > 0 && (

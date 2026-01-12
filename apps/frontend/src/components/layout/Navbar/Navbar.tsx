@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Box, TextInput, Button } from '@markfoster314/marduk';
 import { LogoSvg } from '@/components/common/LogoSvg/LogoSvg';
+import { useAuth } from '@/contexts/AuthContext';
 import './Navbar.css';
 
 interface NavbarProps {
@@ -10,7 +11,36 @@ interface NavbarProps {
 
 export default function Navbar({ showSearch = true }: NavbarProps) {
   const navigate = useNavigate();
+  const { isAuthenticated, user, signOut } = useAuth();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  const handleLogout = async () => {
+    try {
+      await signOut();
+
+      void navigate('/');
+    } catch (_err) {
+      // Error handling is done in auth context
+    }
+  };
+
+  const getProfilePath = () => {
+    if (user) {
+      // Use username (email) as the profile code
+      // Encode it to handle special characters in email
+      const username = user.getUsername();
+      return `/profile/${encodeURIComponent(username)}`;
+    }
+    return '/profile';
+  };
+
+  const handleLogoClick = () => {
+    if (isAuthenticated) {
+      void navigate('/dashboard');
+    } else {
+      void navigate('/');
+    }
+  };
 
   return (
     <Box className="navbar-container">
@@ -19,12 +49,9 @@ export default function Navbar({ showSearch = true }: NavbarProps) {
         <Box className="navbar-logo">
           <button
             type="button"
-            onClick={() => {
-              // eslint-disable-next-line no-void
-              void navigate('/dashboard');
-            }}
+            onClick={handleLogoClick}
             className="navbar-logo-button"
-            aria-label="Navigate to dashboard"
+            aria-label="Navigate to home"
           >
             <LogoSvg size={40} animation="none" />
           </button>
@@ -45,28 +72,51 @@ export default function Navbar({ showSearch = true }: NavbarProps) {
 
         {/* Navigation links on the right */}
         <Box className="navbar-links">
-          <Button
-            preset={['secondaryDark']}
-            appearance="text"
-            onClick={() => {
-              // eslint-disable-next-line no-void
-              void navigate('/dashboard');
-            }}
-            className="navbar-link"
-          >
-            Dashboard
-          </Button>
-          <Button
-            preset={['secondaryDark']}
-            appearance="text"
-            onClick={() => {
-              // eslint-disable-next-line no-void
-              void navigate('/profile/1');
-            }}
-            className="navbar-link"
-          >
-            Profile
-          </Button>
+          {isAuthenticated ? (
+            <>
+              <Button
+                preset={['secondaryDark']}
+                appearance="text"
+                onClick={() => {
+                  void navigate('/dashboard');
+                }}
+                className="navbar-link"
+              >
+                Dashboard
+              </Button>
+              <Button
+                preset={['secondaryDark']}
+                appearance="text"
+                onClick={() => {
+                  void navigate(getProfilePath());
+                }}
+                className="navbar-link"
+              >
+                Profile
+              </Button>
+              <Button
+                preset={['secondaryDark']}
+                appearance="text"
+                onClick={() => {
+                  void handleLogout();
+                }}
+                className="navbar-link"
+              >
+                Logout
+              </Button>
+            </>
+          ) : (
+            <Button
+              preset={['secondaryDark']}
+              appearance="text"
+              onClick={() => {
+                void navigate('/auth');
+              }}
+              className="navbar-link"
+            >
+              Sign In
+            </Button>
+          )}
         </Box>
 
         {/* Hamburger menu button (mobile only) */}
@@ -91,30 +141,55 @@ export default function Navbar({ showSearch = true }: NavbarProps) {
           isMenuOpen ? 'navbar-mobile-menu-open' : ''
         }`}
       >
-        <Button
-          preset={['secondaryDark']}
-          appearance="text"
-          onClick={() => {
-            // eslint-disable-next-line no-void
-            void navigate('/dashboard');
-            setIsMenuOpen(false);
-          }}
-          className="navbar-mobile-link"
-        >
-          Dashboard
-        </Button>
-        <Button
-          preset={['secondaryDark']}
-          appearance="text"
-          onClick={() => {
-            // eslint-disable-next-line no-void
-            void navigate('/profile');
-            setIsMenuOpen(false);
-          }}
-          className="navbar-mobile-link"
-        >
-          Profile
-        </Button>
+        {isAuthenticated ? (
+          <>
+            <Button
+              preset={['secondaryDark']}
+              appearance="text"
+              onClick={() => {
+                void navigate('/dashboard');
+                setIsMenuOpen(false);
+              }}
+              className="navbar-mobile-link"
+            >
+              Dashboard
+            </Button>
+            <Button
+              preset={['secondaryDark']}
+              appearance="text"
+              onClick={() => {
+                void navigate(getProfilePath());
+                setIsMenuOpen(false);
+              }}
+              className="navbar-mobile-link"
+            >
+              Profile
+            </Button>
+            <Button
+              preset={['secondaryDark']}
+              appearance="text"
+              onClick={() => {
+                void handleLogout();
+                setIsMenuOpen(false);
+              }}
+              className="navbar-mobile-link"
+            >
+              Logout
+            </Button>
+          </>
+        ) : (
+          <Button
+            preset={['secondaryDark']}
+            appearance="text"
+            onClick={() => {
+              void navigate('/auth');
+              setIsMenuOpen(false);
+            }}
+            className="navbar-mobile-link"
+          >
+            Sign In
+          </Button>
+        )}
       </Box>
     </Box>
   );

@@ -108,7 +108,7 @@ export default tseslint.config(
       'no-iterator': 'error',
       'no-proto': 'error',
       'no-sequences': 'error',
-      'no-void': 'error',
+      'no-void': 'off',
       radix: 'error',
       yoda: 'error',
 

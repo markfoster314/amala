@@ -1,9 +1,11 @@
 import { lazy, Suspense } from 'react';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import Layout from './components/layout/Layout';
 import { ErrorBoundary } from './components/common/ErrorBoundary';
 import NotFound from './components/common/NotFound/NotFound';
 import { LoadingIndicator } from '@markfoster314/marduk';
+import { AuthProvider, useAuth } from './contexts/AuthContext';
+import ProtectedRoute from './components/common/ProtectedRoute/ProtectedRoute';
 
 // Lazy load pages for code splitting
 const HomePage = lazy(() => import('./pages/HomePage/HomePage'));
@@ -13,25 +15,72 @@ const VideoPage = lazy(() => import('./pages/VideoPage/VideoPage'));
 const PlaylistPage = lazy(() => import('./pages/PlaylistPage/PlaylistPage'));
 const ProfilePage = lazy(() => import('./pages/ProfilePage/ProfilePage'));
 
+// Component to handle redirect for authenticated users on /auth
+function AuthPageWrapper() {
+  const { isAuthenticated } = useAuth();
+
+  if (isAuthenticated) {
+    return <Navigate to="/dashboard" replace />;
+  }
+
+  return <AuthPage />;
+}
+
+function AppRoutes() {
+  return (
+    <Routes>
+      <Route element={<Layout />}>
+        <Route path="/" element={<HomePage />} />
+        <Route path="/auth" element={<AuthPageWrapper />} />
+        <Route
+          path="/dashboard"
+          element={
+            <ProtectedRoute>
+              <Dashboard />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/video/:code"
+          element={
+            <ProtectedRoute>
+              <VideoPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/playlist/:code"
+          element={
+            <ProtectedRoute>
+              <PlaylistPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/profile/:code"
+          element={
+            <ProtectedRoute>
+              <ProfilePage />
+            </ProtectedRoute>
+          }
+        />
+        <Route path="*" element={<NotFound />} />
+      </Route>
+    </Routes>
+  );
+}
+
 function App() {
   return (
     <BrowserRouter>
       <ErrorBoundary>
-        <Suspense
-          fallback={<LoadingIndicator darkMode={true} fullscreen={true} />}
-        >
-          <Routes>
-            <Route element={<Layout />}>
-              <Route path="/" element={<HomePage />} />
-              <Route path="/auth" element={<AuthPage />} />
-              <Route path="/dashboard" element={<Dashboard />} />
-              <Route path="/video/:code" element={<VideoPage />} />
-              <Route path="/playlist/:code" element={<PlaylistPage />} />
-              <Route path="/profile/:code" element={<ProfilePage />} />
-              <Route path="*" element={<NotFound />} />
-            </Route>
-          </Routes>
-        </Suspense>
+        <AuthProvider>
+          <Suspense
+            fallback={<LoadingIndicator darkMode={true} fullscreen={true} />}
+          >
+            <AppRoutes />
+          </Suspense>
+        </AuthProvider>
       </ErrorBoundary>
     </BrowserRouter>
   );
