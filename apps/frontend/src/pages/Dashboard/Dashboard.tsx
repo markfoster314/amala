@@ -3,6 +3,7 @@ import Navbar from '@/components/layout/Navbar/Navbar';
 import VideoCard from '@/components/common/VideoCard/VideoCard';
 import PlaylistCard from '@/components/common/PlaylistCard/PlaylistCard';
 import { useNavigate } from 'react-router-dom';
+import { TextInput } from '@markfoster314/marduk';
 import thumbnailImage from '../../../../../internals/smt3.jpg';
 import './Dashboard.css';
 
@@ -14,6 +15,15 @@ export default function Dashboard() {
     <div className="dashboard-container">
       <Navbar />
       <div className="dashboard-content">
+        <div className="dashboard-search">
+          <TextInput
+            type="text"
+            id="dashboard-search"
+            name="dashboard-search"
+            placeholder="Search..."
+            required={false}
+          />
+        </div>
         <div className="dashboard-grid">
           <PlaylistCard
             playlistUrl="/playlist/example"

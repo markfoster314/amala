@@ -46,7 +46,7 @@ export default function ProfilePage() {
 
   return (
     <div className="profile-page-container">
-      <Navbar showSearch={false} />
+      <Navbar />
       <div className="profile-page-content">
         <Box className="profile-header">
           <Title preset={['primaryDark']} level={1} className="profile-title">

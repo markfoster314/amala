@@ -1,15 +1,11 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Box, TextInput, Button } from '@markfoster314/marduk';
+import { Box, Button } from '@markfoster314/marduk';
 import { LogoSvg } from '@/components/common/LogoSvg/LogoSvg';
 import { useAuth } from '@/contexts/AuthContext';
 import './Navbar.css';
 
-interface NavbarProps {
-  showSearch?: boolean;
-}
-
-export default function Navbar({ showSearch = true }: NavbarProps) {
+export default function Navbar() {
   const navigate = useNavigate();
   const { isAuthenticated, user, signOut } = useAuth();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -56,19 +52,6 @@ export default function Navbar({ showSearch = true }: NavbarProps) {
             <LogoSvg size={40} animation="none" />
           </button>
         </Box>
-
-        {/* Search input in the middle */}
-        {showSearch && (
-          <Box className="navbar-search">
-            <TextInput
-              type="text"
-              id="navbar-search"
-              name="navbar-search"
-              placeholder="Search..."
-              required={false}
-            />
-          </Box>
-        )}
 
         {/* Navigation links on the right */}
         <Box className="navbar-links">
