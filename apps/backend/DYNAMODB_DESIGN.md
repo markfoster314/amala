@@ -18,10 +18,12 @@ Both keys are required for the table structure, allowing for future expansion wi
 Stores user profile information.
 
 **Key Structure:**
+
 - `PK`: `USER#<cognito-sub-uuid>`
 - `SK`: `PROFILE`
 
 **Attributes:**
+
 - `username`: string (required)
 - `displayname`: string (required)
 - `description`: string (optional)
@@ -29,6 +31,7 @@ Stores user profile information.
 - `updatedAt`: timestamp (ISO 8601 string)
 
 **Example Item:**
+
 ```json
 {
   "PK": "USER#a1b2c3d4-e5f6-7890-abcd-ef1234567890",
@@ -46,12 +49,14 @@ Stores user profile information.
 #### PUBLICVIDEO#ID Items
 
 **Key Structure:**
+
 - `PK`: `PUBLICVIDEO#<videoId>`
 - `SK`: `METADATA` (or video-specific identifier)
 
 #### PRIVATEVIDEO#ID Items
 
 **Key Structure:**
+
 - `PK`: `PRIVATEVIDEO#<videoId>`
 - `SK`: `METADATA` (or video-specific identifier)
 
@@ -61,11 +66,11 @@ Stores user profile information.
 
 1. **Get User Profile**: Query by `PK = USER#<userId>` and `SK = PROFILE`
 2. **Create/Update User Profile**: PutItem with `PK = USER#<userId>` and `SK = PROFILE`
-3. **Check Username Uniqueness**: Query GSI `username-index` by `username = <username>` to find existing profiles
+3. **Check Username Uniqueness**: Query GSI `Username` by `username = <username>` to find existing profiles
 
 ### Global Secondary Indexes (GSI)
 
-#### username-index
+#### Username
 
 Used for checking username uniqueness.
 
@@ -100,7 +105,7 @@ aws dynamodb create-table \
     AttributeName=SK,KeyType=RANGE \
   --global-secondary-indexes \
     '[{
-      "IndexName": "username-index",
+      "IndexName": "Username",
       "KeySchema": [
         {"AttributeName": "username", "KeyType": "HASH"},
         {"AttributeName": "PK", "KeyType": "RANGE"}
@@ -115,7 +120,7 @@ aws dynamodb create-table \
 
 #### Add GSI to Existing Table
 
-If you need to add the `username-index` GSI to an existing table:
+If you need to add the `Username` GSI to an existing table:
 
 ```bash
 aws dynamodb update-table \
@@ -127,7 +132,7 @@ aws dynamodb update-table \
   --global-secondary-index-updates \
     '[{
       "Create": {
-        "IndexName": "username-index",
+        "IndexName": "Username",
         "KeySchema": [
           {"AttributeName": "username", "KeyType": "HASH"},
           {"AttributeName": "PK", "KeyType": "RANGE"}
@@ -141,7 +146,8 @@ aws dynamodb update-table \
   --region us-east-1
 ```
 
-**Note**: 
+**Note**:
+
 - Replace `amala-data` with your actual table name if different
 - Replace `us-east-1` with your AWS region
 - Adding a GSI to an existing table may take several minutes
@@ -167,5 +173,5 @@ See infrastructure-as-code examples in `apps/aws/` directory (future implementat
 - The `userId` in `USER#<userId>` is the Cognito `sub` claim (UUID)
 - All timestamps are stored as ISO 8601 strings
 - The table uses on-demand billing for flexible scaling
-- The `username-index` GSI enables efficient username uniqueness checks
+- The `Username` GSI enables efficient username uniqueness checks
 - The single-table design allows for efficient queries and lower costs compared to multiple tables
