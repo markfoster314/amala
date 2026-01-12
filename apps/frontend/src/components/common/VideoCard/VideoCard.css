@@ -29,6 +29,7 @@
   height: 100%;
   object-fit: cover;
   display: block;
+  background-color: var(--marduk-color-gray-900, #111827);
 }
 
 .video-card-progress-overlay {

@@ -3,6 +3,7 @@ import './VideoCard.css';
 
 export interface VideoCardProps {
   videoUrl: string;
+  thumbnail: string;
   title: string;
   completionPercentage: number;
   onClick?: () => void;
@@ -10,7 +11,8 @@ export interface VideoCardProps {
 }
 
 export default function VideoCard({
-  videoUrl,
+  videoUrl: _videoUrl,
+  thumbnail,
   title,
   completionPercentage,
   onClick,
@@ -27,13 +29,7 @@ export default function VideoCard({
       tabIndex={onClick ? 0 : undefined}
     >
       <Box className="video-card-thumbnail-container">
-        <video
-          className="video-card-thumbnail"
-          src={videoUrl}
-          preload="metadata"
-          muted
-          playsInline
-        />
+        <img className="video-card-thumbnail" src={thumbnail} alt={title} />
         <Box className="video-card-progress-overlay">
           <Box
             className="video-card-progress-bar"

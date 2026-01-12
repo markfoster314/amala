@@ -9,6 +9,7 @@ const HomePage = lazy(() => import('./pages/HomePage/HomePage'));
 const AuthPage = lazy(() => import('./pages/AuthPage/AuthPage'));
 const Dashboard = lazy(() => import('./pages/Dashboard/Dashboard'));
 const VideoPage = lazy(() => import('./pages/VideoPage/VideoPage'));
+const PlaylistPage = lazy(() => import('./pages/PlaylistPage/PlaylistPage'));
 
 function App() {
   return (
@@ -21,6 +22,7 @@ function App() {
               <Route path="/auth" element={<AuthPage />} />
               <Route path="/dashboard" element={<Dashboard />} />
               <Route path="/video/:code" element={<VideoPage />} />
+              <Route path="/playlist/:code" element={<PlaylistPage />} />
               <Route path="*" element={<NotFound />} />
             </Route>
           </Routes>
