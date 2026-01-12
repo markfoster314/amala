@@ -194,7 +194,7 @@ export default function ProfilePage() {
                 </Button>
                 <Button
                   preset={['primaryDark']}
-                  onClick={handleSave}
+                  onClick={void handleSave}
                   className="profile-save-button"
                   disabled={isSaving}
                 >
