@@ -55,7 +55,7 @@ export default function Navbar() {
             appearance="text"
             onClick={() => {
               // eslint-disable-next-line no-void
-              void navigate('/profile');
+              void navigate('/profile/1');
             }}
             className="navbar-link"
           >

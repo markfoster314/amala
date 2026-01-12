@@ -3,3 +3,4 @@ export { default as AuthPage } from './AuthPage/AuthPage';
 export { default as Dashboard } from './Dashboard/Dashboard';
 export { default as VideoPage } from './VideoPage/VideoPage';
 export { default as PlaylistPage } from './PlaylistPage/PlaylistPage';
+export { default as ProfilePage } from './ProfilePage/ProfilePage';
