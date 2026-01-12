@@ -442,3 +442,21 @@ export async function changePassword(
     );
   });
 }
+
+export async function getUserId(): Promise<string | null> {
+  try {
+    const session = await getSession();
+    if (!session) {
+      return null;
+    }
+
+    const idToken = session.getIdToken();
+    const payload = idToken.decodePayload();
+
+    // The 'sub' claim is the unique user ID (UUID)
+    const userId = payload['sub'] as string | undefined;
+    return userId ?? null;
+  } catch (_err) {
+    return null;
+  }
+}
