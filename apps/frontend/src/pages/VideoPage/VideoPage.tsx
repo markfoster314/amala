@@ -18,7 +18,7 @@ export default function VideoPage() {
 
   return (
     <div className="video-page-container">
-      <Navbar />
+      <Navbar showSearch={false} />
       <div className="video-page-content">
         <Box className="video-player-container">
           <ReactPlayer

@@ -7,6 +7,9 @@ import './ProfilePage.css';
 export default function ProfilePage() {
   const { code } = useParams<{ code: string }>();
 
+  // eslint-disable-next-line no-console
+  console.log(code);
+
   // Placeholder data - will be fetched from API later
   const [username, setUsername] = useState('johndoe');
   const [displayName, setDisplayName] = useState('John Doe');
@@ -43,7 +46,7 @@ export default function ProfilePage() {
 
   return (
     <div className="profile-page-container">
-      <Navbar />
+      <Navbar showSearch={false} />
       <div className="profile-page-content">
         <Box className="profile-header">
           <Title preset={['primaryDark']} level={1} className="profile-title">
@@ -116,7 +119,10 @@ export default function ProfilePage() {
           ) : (
             <>
               <Box className="profile-field">
-                <Text preset={['secondaryDark']} className="profile-field-label">
+                <Text
+                  preset={['secondaryDark']}
+                  className="profile-field-label"
+                >
                   Username
                 </Text>
                 <Text preset={['primaryDark']} className="profile-field-value">
@@ -124,7 +130,10 @@ export default function ProfilePage() {
                 </Text>
               </Box>
               <Box className="profile-field">
-                <Text preset={['secondaryDark']} className="profile-field-label">
+                <Text
+                  preset={['secondaryDark']}
+                  className="profile-field-label"
+                >
                   Display Name
                 </Text>
                 <Text preset={['primaryDark']} className="profile-field-value">
@@ -132,7 +141,10 @@ export default function ProfilePage() {
                 </Text>
               </Box>
               <Box className="profile-field">
-                <Text preset={['secondaryDark']} className="profile-field-label">
+                <Text
+                  preset={['secondaryDark']}
+                  className="profile-field-label"
+                >
                   Description
                 </Text>
                 <Text preset={['primaryDark']} className="profile-field-value">

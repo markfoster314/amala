@@ -47,7 +47,7 @@ export default function PlaylistPage() {
 
   return (
     <div className="playlist-page-container">
-      <Navbar />
+      <Navbar showSearch={false} />
       <div className="playlist-page-content">
         {/* Playlist Header */}
         <Box className="playlist-header">

@@ -4,7 +4,11 @@ import { Box, TextInput, Button } from '@markfoster314/marduk';
 import { LogoSvg } from '@/components/common/LogoSvg/LogoSvg';
 import './Navbar.css';
 
-export default function Navbar() {
+interface NavbarProps {
+  showSearch?: boolean;
+}
+
+export default function Navbar({ showSearch = true }: NavbarProps) {
   const navigate = useNavigate();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
@@ -27,15 +31,17 @@ export default function Navbar() {
         </Box>
 
         {/* Search input in the middle */}
-        <Box className="navbar-search">
-          <TextInput
-            type="text"
-            id="navbar-search"
-            name="navbar-search"
-            placeholder="Search..."
-            required={false}
-          />
-        </Box>
+        {showSearch && (
+          <Box className="navbar-search">
+            <TextInput
+              type="text"
+              id="navbar-search"
+              name="navbar-search"
+              placeholder="Search..."
+              required={false}
+            />
+          </Box>
+        )}
 
         {/* Navigation links on the right */}
         <Box className="navbar-links">
