@@ -22,7 +22,10 @@ export interface ProfileUpdate {
   description?: string;
 }
 
-const API_BASE_URL = import.meta.env.VITE_API_URL ?? 'http://localhost:3001';
+const API_BASE_URL: string =
+  typeof import.meta.env['VITE_API_URL'] === 'string'
+    ? import.meta.env['VITE_API_URL']
+    : 'http://localhost:3001';
 
 export class ApiError extends Error {
   constructor(
@@ -85,7 +88,10 @@ async function apiClient<T>(
   }
 
   // Handle empty responses (e.g., 204 No Content)
-  if (response.status === 204 || response.headers.get('content-length') === '0') {
+  if (
+    response.status === 204 ||
+    response.headers.get('content-length') === '0'
+  ) {
     return {} as T;
   }
 
@@ -96,13 +102,17 @@ async function apiClient<T>(
  * Get user profile by userId
  */
 export async function getProfile(userId: string): Promise<ProfileResponse> {
-  return apiClient<ProfileResponse>(`/api/profile/${encodeURIComponent(userId)}`);
+  return apiClient<ProfileResponse>(
+    `/api/profile/${encodeURIComponent(userId)}`
+  );
 }
 
 /**
  * Create a new user profile (uses userId from token)
  */
-export async function createProfile(data: ProfileInput): Promise<ProfileResponse> {
+export async function createProfile(
+  data: ProfileInput
+): Promise<ProfileResponse> {
   return apiClient<ProfileResponse>('/api/profile', {
     method: 'POST',
     body: JSON.stringify(data),
@@ -116,8 +126,11 @@ export async function updateProfile(
   userId: string,
   data: ProfileUpdate
 ): Promise<ProfileResponse> {
-  return apiClient<ProfileResponse>(`/api/profile/${encodeURIComponent(userId)}`, {
-    method: 'PUT',
-    body: JSON.stringify(data),
-  });
+  return apiClient<ProfileResponse>(
+    `/api/profile/${encodeURIComponent(userId)}`,
+    {
+      method: 'PUT',
+      body: JSON.stringify(data),
+    }
+  );
 }

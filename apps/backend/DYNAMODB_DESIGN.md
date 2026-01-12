@@ -61,6 +61,19 @@ Stores user profile information.
 
 1. **Get User Profile**: Query by `PK = USER#<userId>` and `SK = PROFILE`
 2. **Create/Update User Profile**: PutItem with `PK = USER#<userId>` and `SK = PROFILE`
+3. **Check Username Uniqueness**: Query GSI `username-index` by `username = <username>` to find existing profiles
+
+### Global Secondary Indexes (GSI)
+
+#### username-index
+
+Used for checking username uniqueness.
+
+- **Partition Key**: `username` (String)
+- **Sort Key**: `PK` (String - the USER#userId)
+- **Projection**: ALL (projects all attributes)
+
+**Usage**: Query by username to check if it's already taken by another user.
 
 ### Future Access Patterns (Planned)
 
@@ -73,18 +86,66 @@ Stores user profile information.
 
 ### Using AWS CLI
 
+#### Create Table
+
 ```bash
 aws dynamodb create-table \
   --table-name amala-data \
   --attribute-definitions \
     AttributeName=PK,AttributeType=S \
     AttributeName=SK,AttributeType=S \
+    AttributeName=username,AttributeType=S \
   --key-schema \
     AttributeName=PK,KeyType=HASH \
     AttributeName=SK,KeyType=RANGE \
+  --global-secondary-indexes \
+    '[{
+      "IndexName": "username-index",
+      "KeySchema": [
+        {"AttributeName": "username", "KeyType": "HASH"},
+        {"AttributeName": "PK", "KeyType": "RANGE"}
+      ],
+      "Projection": {
+        "ProjectionType": "ALL"
+      }
+    }]' \
   --billing-mode PAY_PER_REQUEST \
   --region us-east-1
 ```
+
+#### Add GSI to Existing Table
+
+If you need to add the `username-index` GSI to an existing table:
+
+```bash
+aws dynamodb update-table \
+  --table-name amala-data \
+  --attribute-definitions \
+    AttributeName=PK,AttributeType=S \
+    AttributeName=SK,AttributeType=S \
+    AttributeName=username,AttributeType=S \
+  --global-secondary-index-updates \
+    '[{
+      "Create": {
+        "IndexName": "username-index",
+        "KeySchema": [
+          {"AttributeName": "username", "KeyType": "HASH"},
+          {"AttributeName": "PK", "KeyType": "RANGE"}
+        ],
+        "Projection": {
+          "ProjectionType": "ALL"
+        },
+        "BillingMode": "PAY_PER_REQUEST"
+      }
+    }]' \
+  --region us-east-1
+```
+
+**Note**: 
+- Replace `amala-data` with your actual table name if different
+- Replace `us-east-1` with your AWS region
+- Adding a GSI to an existing table may take several minutes
+- Wait for the index to become `ACTIVE` before using it (check with `aws dynamodb describe-table --table-name amala-data`)
 
 ### Using AWS Console
 
@@ -106,5 +167,5 @@ See infrastructure-as-code examples in `apps/aws/` directory (future implementat
 - The `userId` in `USER#<userId>` is the Cognito `sub` claim (UUID)
 - All timestamps are stored as ISO 8601 strings
 - The table uses on-demand billing for flexible scaling
-- Indexes (GSIs) can be added later for additional query patterns
+- The `username-index` GSI enables efficient username uniqueness checks
 - The single-table design allows for efficient queries and lower costs compared to multiple tables

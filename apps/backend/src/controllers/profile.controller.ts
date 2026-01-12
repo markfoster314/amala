@@ -21,14 +21,26 @@ export async function getProfile(
 ): Promise<void> {
   try {
     const { userId } = req.params;
+    const authenticatedUserId = req.userId;
+
+    console.log(
+      `[${new Date().toISOString()}] GET Profile - Requested userId: ${userId}, Authenticated userId: ${authenticatedUserId}`
+    );
 
     if (!userId) {
       throw new ValidationError('User ID is required');
     }
 
     const profile = await profileService.getUserProfile(userId);
+    console.log(
+      `[${new Date().toISOString()}] GET Profile - Success for userId: ${userId}`
+    );
     res.json(profile);
   } catch (error) {
+    console.error(
+      `[${new Date().toISOString()}] GET Profile - Error:`,
+      error instanceof Error ? error.message : String(error)
+    );
     next(error);
   }
 }

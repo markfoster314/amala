@@ -194,7 +194,8 @@ export default function ProfilePage() {
                 </Button>
                 <Button
                   preset={['primaryDark']}
-                  onClick={void handleSave}
+                  // eslint-disable-next-line @typescript-eslint/no-misused-promises
+                  onClick={handleSave}
                   className="profile-save-button"
                   disabled={isSaving}
                 >
