@@ -1,40 +1,107 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import Navbar from '@/components/layout/Navbar/Navbar';
-import { Box, Text, Title, Button, TextInput } from '@markfoster314/marduk';
+import {
+  Box,
+  Text,
+  Title,
+  Button,
+  TextInput,
+  LoadingIndicator,
+} from '@markfoster314/marduk';
+import { getProfile, updateProfile, ApiError } from '@/lib/api';
 import './ProfilePage.css';
 
 export default function ProfilePage() {
   const { code } = useParams<{ code: string }>();
 
-  // eslint-disable-next-line no-console
-  console.log(code);
-
-  // Placeholder data - will be fetched from API later
-  const [username, setUsername] = useState('johndoe');
-  const [displayName, setDisplayName] = useState('John Doe');
-  const [description, setDescription] = useState(
-    'This is my profile description. I love sharing videos with my friends!'
-  );
+  const [username, setUsername] = useState('');
+  const [displayName, setDisplayName] = useState('');
+  const [description, setDescription] = useState('');
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   const [isEditing, setIsEditing] = useState(false);
-  const [editUsername, setEditUsername] = useState(username);
-  const [editDisplayName, setEditDisplayName] = useState(displayName);
-  const [editDescription, setEditDescription] = useState(description);
+  const [editUsername, setEditUsername] = useState('');
+  const [editDisplayName, setEditDisplayName] = useState('');
+  const [editDescription, setEditDescription] = useState('');
+  const [isSaving, setIsSaving] = useState(false);
+
+  // Fetch profile data on mount
+  useEffect(() => {
+    async function fetchProfile() {
+      if (!code) {
+        setError('User ID is required');
+        setIsLoading(false);
+        return;
+      }
+
+      try {
+        setIsLoading(true);
+        setError(null);
+        const profile = await getProfile(code);
+
+        setUsername(profile.username);
+        setDisplayName(profile.displayname);
+        setDescription(profile.description ?? '');
+        setEditUsername(profile.username);
+        setEditDisplayName(profile.displayname);
+        setEditDescription(profile.description ?? '');
+      } catch (err) {
+        const errorMessage =
+          err instanceof ApiError
+            ? err.message
+            : 'Failed to load profile. Please try again.';
+        setError(errorMessage);
+        // eslint-disable-next-line no-console
+        console.error('Error fetching profile:', err);
+      } finally {
+        setIsLoading(false);
+      }
+    }
+
+    void fetchProfile();
+  }, [code]);
 
   const handleEdit = () => {
     setEditUsername(username);
     setEditDisplayName(displayName);
     setEditDescription(description);
     setIsEditing(true);
+    setError(null);
   };
 
-  const handleSave = () => {
-    setUsername(editUsername);
-    setDisplayName(editDisplayName);
-    setDescription(editDescription);
-    setIsEditing(false);
-    // TODO: Save to API
+  const handleSave = async () => {
+    if (!code) {
+      setError('User ID is required');
+      return;
+    }
+
+    try {
+      setIsSaving(true);
+      setError(null);
+
+      const profile = await updateProfile(code, {
+        username: editUsername,
+        displayname: editDisplayName,
+        description: editDescription,
+      });
+
+      setUsername(profile.username);
+      setDisplayName(profile.displayname);
+      setDescription(profile.description ?? '');
+      setIsEditing(false);
+    } catch (err) {
+      const errorMessage =
+        err instanceof ApiError
+          ? err.message
+          : 'Failed to save profile. Please try again.';
+      setError(errorMessage);
+      // eslint-disable-next-line no-console
+      console.error('Error updating profile:', err);
+    } finally {
+      setIsSaving(false);
+    }
   };
 
   const handleCancel = () => {
@@ -42,7 +109,19 @@ export default function ProfilePage() {
     setEditDisplayName(displayName);
     setEditDescription(description);
     setIsEditing(false);
+    setError(null);
   };
+
+  if (isLoading) {
+    return (
+      <div className="profile-page-container">
+        <Navbar />
+        <div className="profile-page-content">
+          <LoadingIndicator darkMode={true} />
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="profile-page-container">
@@ -62,6 +141,12 @@ export default function ProfilePage() {
             </Button>
           )}
         </Box>
+
+        {error && (
+          <Box className="profile-error">
+            <Text preset={['secondaryDark']}>{error}</Text>
+          </Box>
+        )}
 
         <Box className="profile-fields">
           {isEditing ? (
@@ -111,8 +196,9 @@ export default function ProfilePage() {
                   preset={['primaryDark']}
                   onClick={handleSave}
                   className="profile-save-button"
+                  disabled={isSaving}
                 >
-                  Save Changes
+                  {isSaving ? 'Saving...' : 'Save Changes'}
                 </Button>
               </Box>
             </>

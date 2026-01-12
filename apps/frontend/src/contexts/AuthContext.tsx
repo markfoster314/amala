@@ -19,7 +19,9 @@ import {
   confirmPassword as cognitoConfirmPassword,
   refreshSession,
   CognitoError,
+  getUserId,
 } from '@/lib/cognito';
+import { getProfile, createProfile, ApiError } from '@/lib/api';
 
 interface AuthContextType {
   user: CognitoUser | null;
@@ -147,6 +149,38 @@ export function AuthProvider({ children }: AuthProviderProps) {
       if (currentUser) {
         setUser(currentUser);
         setIsAuthenticated(true);
+
+        // Check if profile exists, create if missing
+        // Don't block auth flow if profile creation fails
+        try {
+          const userId = await getUserId();
+          if (userId) {
+            try {
+              await getProfile(userId);
+              // Profile exists, nothing to do
+            } catch (profileError) {
+              // Profile doesn't exist (404) or other error
+              if (profileError instanceof ApiError && profileError.statusCode === 404) {
+                // Extract username from email (part before @)
+                const usernameFromEmail = email.split('@')[0] ?? email;
+                const displaynameFromEmail = email;
+
+                // Create profile with defaults
+                await createProfile({
+                  username: usernameFromEmail,
+                  displayname: displaynameFromEmail,
+                  description: '',
+                });
+              }
+              // For other errors, just log but don't throw
+              // We don't want to block the sign-in flow
+            }
+          }
+        } catch (_profileErr) {
+          // Silently fail profile creation/check - don't block authentication
+          // eslint-disable-next-line no-console
+          console.warn('Failed to check/create profile after sign-in:', _profileErr);
+        }
       }
     } catch (err) {
       const errorMessage =
