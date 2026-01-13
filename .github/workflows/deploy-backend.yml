@@ -1,0 +1,109 @@
+name: Deploy Backend to EC2
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'apps/backend/**'
+      - 'apps/backend/Dockerfile'
+      - '.github/workflows/deploy-backend.yml'
+  workflow_dispatch: # Allow manual deployment
+
+env:
+  AWS_REGION: us-east-1 # Change to your region
+  ECR_REPOSITORY: amala-backend # Change to your ECR repository name
+  DOCKERFILE_PATH: apps/backend/Dockerfile
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v2
+
+      - name: Build, tag, and push image to Amazon ECR
+        id: build-image
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          IMAGE_TAG: ${{ github.sha }}
+        run: |
+          # Build Docker image
+          docker build -f ${{ env.DOCKERFILE_PATH }} -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG -t $ECR_REGISTRY/$ECR_REPOSITORY:latest .
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY:latest
+          echo "image=$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG" >> $GITHUB_OUTPUT
+
+      - name: Deploy to EC2
+        env:
+          EC2_HOST: ${{ secrets.EC2_HOST }}
+          EC2_USER: ec2-user
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          IMAGE_TAG: ${{ github.sha }}
+        run: |
+          # Create deployment script
+          cat << 'DEPLOY_SCRIPT' > deploy.sh
+          #!/bin/bash
+          set -e
+
+          # Login to ECR
+          aws ecr get-login-password --region ${{ env.AWS_REGION }} | docker login --username AWS --password-stdin $ECR_REGISTRY
+
+          # Pull latest image
+          docker pull $ECR_REGISTRY/$ECR_REPOSITORY:latest
+
+          # Stop and remove old container
+          docker stop amala-backend || true
+          docker rm amala-backend || true
+
+          # Run new container
+          docker run -d \
+            --name amala-backend \
+            --restart unless-stopped \
+            -p 3001:3001 \
+            -e NODE_ENV=production \
+            -e PORT=3001 \
+            -e AWS_REGION=$AWS_REGION \
+            -e AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID \
+            -e AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY \
+            -e DYNAMODB_TABLE_NAME=$DYNAMODB_TABLE_NAME \
+            -e AWS_S3_THUMBNAILS_BUCKET=$AWS_S3_THUMBNAILS_BUCKET \
+            -e COGNITO_USER_POOL_ID=$COGNITO_USER_POOL_ID \
+            -e COGNITO_CLIENT_ID=$COGNITO_CLIENT_ID \
+            $ECR_REGISTRY/$ECR_REPOSITORY:latest
+
+          # Clean up old images
+          docker image prune -af --filter "until=168h"
+          DEPLOY_SCRIPT
+
+          # Copy deployment script to EC2
+          echo "${{ secrets.EC2_SSH_KEY }}" > ec2-key.pem
+          chmod 600 ec2-key.pem
+          scp -i ec2-key.pem -o StrictHostKeyChecking=no deploy.sh $EC2_USER@$EC2_HOST:/tmp/
+
+          # Execute deployment script on EC2
+          ssh -i ec2-key.pem -o StrictHostKeyChecking=no $EC2_USER@$EC2_HOST << 'ENDSSH'
+          export AWS_REGION=${{ env.AWS_REGION }}
+          export ECR_REGISTRY=${{ steps.login-ecr.outputs.registry }}
+          export ECR_REPOSITORY=${{ env.ECR_REPOSITORY }}
+          export AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }}
+          export AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          export DYNAMODB_TABLE_NAME=${{ secrets.DYNAMODB_TABLE_NAME }}
+          export AWS_S3_THUMBNAILS_BUCKET=${{ secrets.AWS_S3_THUMBNAILS_BUCKET }}
+          export COGNITO_USER_POOL_ID=${{ secrets.COGNITO_USER_POOL_ID }}
+          export COGNITO_CLIENT_ID=${{ secrets.COGNITO_CLIENT_ID }}
+          bash /tmp/deploy.sh
+          ENDSSH
+
+          # Clean up
+          rm -f ec2-key.pem deploy.sh
