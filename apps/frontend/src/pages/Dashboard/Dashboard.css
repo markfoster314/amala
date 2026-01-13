@@ -55,3 +55,18 @@
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
   gap: 2rem;
 }
+
+.dashboard-error {
+  padding: 1rem;
+  margin-bottom: 1.5rem;
+  background-color: var(--marduk-color-red-900, #7f1d1d);
+  border: 1px solid var(--marduk-color-red-700, #b91c1c);
+  border-radius: 0.5rem;
+  color: var(--marduk-color-red-100, #fee2e2);
+}
+
+.dashboard-empty {
+  padding: 2rem;
+  text-align: center;
+  margin-top: 2rem;
+}

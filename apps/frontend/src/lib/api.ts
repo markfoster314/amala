@@ -22,6 +22,44 @@ export interface ProfileUpdate {
   description?: string;
 }
 
+// Video types
+export interface VideoResponse {
+  videoId: string;
+  title: string;
+  videoUrl: string;
+  thumbnailUrl: string;
+  userId: string;
+  isPublic: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface VideoInput {
+  title: string;
+  videoUrl: string;
+  thumbnailUrl: string;
+  isPublic: boolean;
+}
+
+// Playlist types
+export interface PlaylistResponse {
+  playlistId: string;
+  title: string;
+  description?: string;
+  thumbnailUrl: string;
+  userId: string;
+  isPublic: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface PlaylistInput {
+  title: string;
+  description?: string;
+  thumbnailUrl: string;
+  isPublic: boolean;
+}
+
 const API_BASE_URL: string =
   typeof import.meta.env['VITE_API_URL'] === 'string'
     ? import.meta.env['VITE_API_URL']
@@ -132,5 +170,107 @@ export async function updateProfile(
       method: 'PUT',
       body: JSON.stringify(data),
     }
+  );
+}
+
+/**
+ * Upload a video with thumbnail
+ */
+export async function uploadVideo(formData: FormData): Promise<VideoResponse> {
+  const token = await getIdToken();
+
+  const response = await fetch(`${API_BASE_URL}/api/video`, {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+    body: formData,
+  });
+
+  if (!response.ok) {
+    let errorMessage = `Request failed with status ${response.status}`;
+    let errorCode: string | undefined;
+
+    try {
+      const errorData = (await response.json()) as {
+        error?: { message?: string; code?: string };
+      };
+      errorMessage = errorData.error?.message ?? errorMessage;
+      errorCode = errorData.error?.code;
+    } catch {
+      errorMessage = response.statusText || errorMessage;
+    }
+
+    throw new ApiError(errorMessage, response.status, errorCode);
+  }
+
+  return response.json() as Promise<VideoResponse>;
+}
+
+/**
+ * Upload a playlist with thumbnail
+ */
+export async function uploadPlaylist(
+  formData: FormData
+): Promise<PlaylistResponse> {
+  const token = await getIdToken();
+
+  const response = await fetch(`${API_BASE_URL}/api/playlist`, {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+    body: formData,
+  });
+
+  if (!response.ok) {
+    let errorMessage = `Request failed with status ${response.status}`;
+    let errorCode: string | undefined;
+
+    try {
+      const errorData = (await response.json()) as {
+        error?: { message?: string; code?: string };
+      };
+      errorMessage = errorData.error?.message ?? errorMessage;
+      errorCode = errorData.error?.code;
+    } catch {
+      errorMessage = response.statusText || errorMessage;
+    }
+
+    throw new ApiError(errorMessage, response.status, errorCode);
+  }
+
+  return response.json() as Promise<PlaylistResponse>;
+}
+
+/**
+ * Get all public videos
+ */
+export async function getPublicVideos(): Promise<VideoResponse[]> {
+  return apiClient<VideoResponse[]>('/api/video/public');
+}
+
+/**
+ * Get all public playlists
+ */
+export async function getPublicPlaylists(): Promise<PlaylistResponse[]> {
+  return apiClient<PlaylistResponse[]>('/api/playlist/public');
+}
+
+/**
+ * Get video by ID
+ */
+export async function getVideo(videoId: string): Promise<VideoResponse> {
+  return apiClient<VideoResponse>(`/api/video/${encodeURIComponent(videoId)}`);
+}
+
+/**
+ * Get playlist by ID
+ */
+export async function getPlaylist(
+  playlistId: string
+): Promise<PlaylistResponse> {
+  return apiClient<PlaylistResponse>(
+    `/api/playlist/${encodeURIComponent(playlistId)}`
   );
 }

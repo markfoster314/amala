@@ -8,6 +8,14 @@
   background-color: var(--marduk-color-gray-800, #0f0a1a);
 }
 
+.video-error {
+  padding: 1rem;
+  background-color: var(--marduk-color-red-900, #7f1d1d);
+  border: 1px solid var(--marduk-color-red-700, #b91c1c);
+  border-radius: 0.5rem;
+  color: var(--marduk-color-red-100, #fee2e2);
+}
+
 .video-page-content {
   flex: 1;
   padding: 2rem;

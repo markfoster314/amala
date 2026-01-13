@@ -1,6 +1,8 @@
 import express from 'express';
 import cors from 'cors';
 import profileRoutes from './routes/profile.routes';
+import videoRoutes from './routes/video.routes';
+import playlistRoutes from './routes/playlist.routes';
 import { AppError } from './utils/errors';
 import { requestLogger } from './middleware/request-logger.middleware';
 
@@ -22,6 +24,8 @@ export function createApp(): express.Application {
 
   // API routes
   app.use('/api/profile', profileRoutes);
+  app.use('/api/video', videoRoutes);
+  app.use('/api/playlist', playlistRoutes);
 
   // Error handling middleware
   app.use((err: Error, req: express.Request, res: express.Response, _next: express.NextFunction): void => {

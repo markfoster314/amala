@@ -8,6 +8,19 @@
   background-color: var(--marduk-color-gray-800, #0f0a1a);
 }
 
+.playlist-error {
+  padding: 1rem;
+  background-color: var(--marduk-color-red-900, #7f1d1d);
+  border: 1px solid var(--marduk-color-red-700, #b91c1c);
+  border-radius: 0.5rem;
+  color: var(--marduk-color-red-100, #fee2e2);
+}
+
+.playlist-empty {
+  padding: 2rem;
+  text-align: center;
+}
+
 .playlist-page-content {
   flex: 1;
   padding: 2rem;

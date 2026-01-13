@@ -14,6 +14,7 @@ const Dashboard = lazy(() => import('./pages/Dashboard/Dashboard'));
 const VideoPage = lazy(() => import('./pages/VideoPage/VideoPage'));
 const PlaylistPage = lazy(() => import('./pages/PlaylistPage/PlaylistPage'));
 const ProfilePage = lazy(() => import('./pages/ProfilePage/ProfilePage'));
+const UploadPage = lazy(() => import('./pages/UploadPage/UploadPage'));
 
 // Component to handle redirect for authenticated users on /auth
 function AuthPageWrapper() {
@@ -61,6 +62,14 @@ function AppRoutes() {
           element={
             <ProtectedRoute>
               <ProfilePage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/upload"
+          element={
+            <ProtectedRoute>
+              <UploadPage />
             </ProtectedRoute>
           }
         />

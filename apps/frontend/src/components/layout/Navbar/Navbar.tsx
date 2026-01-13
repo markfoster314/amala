@@ -71,6 +71,16 @@ export default function Navbar() {
                 preset={['secondaryDark']}
                 appearance="text"
                 onClick={() => {
+                  void navigate('/upload');
+                }}
+                className="navbar-link"
+              >
+                Upload
+              </Button>
+              <Button
+                preset={['secondaryDark']}
+                appearance="text"
+                onClick={() => {
                   void navigate(getProfilePath());
                 }}
                 className="navbar-link"
@@ -136,6 +146,17 @@ export default function Navbar() {
               className="navbar-mobile-link"
             >
               Dashboard
+            </Button>
+            <Button
+              preset={['secondaryDark']}
+              appearance="text"
+              onClick={() => {
+                void navigate('/upload');
+                setIsMenuOpen(false);
+              }}
+              className="navbar-mobile-link"
+            >
+              Upload
             </Button>
             <Button
               preset={['secondaryDark']}

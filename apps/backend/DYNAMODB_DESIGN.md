@@ -44,21 +44,137 @@ Stores user profile information.
 }
 ```
 
-### Future Item Types (Not Implemented Yet)
-
 #### PUBLICVIDEO#ID Items
+
+Stores public video metadata.
 
 **Key Structure:**
 
 - `PK`: `PUBLICVIDEO#<videoId>`
-- `SK`: `METADATA` (or video-specific identifier)
+- `SK`: `METADATA`
+
+**Attributes:**
+
+- `title`: string (required)
+- `videoUrl`: string (required) - URL to the video
+- `thumbnailUrl`: string (required) - S3 URL to thumbnail image
+- `userId`: string (required) - Creator's Cognito sub
+- `createdAt`: timestamp (ISO 8601 string)
+- `updatedAt`: timestamp (ISO 8601 string)
+
+**Example Item:**
+
+```json
+{
+  "PK": "PUBLICVIDEO#a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+  "SK": "METADATA",
+  "title": "Example Video",
+  "videoUrl": "https://www.youtube.com/watch?v=example",
+  "thumbnailUrl": "https://bucket.s3.amazonaws.com/thumbnails/abc123.jpg",
+  "userId": "user-uuid-here",
+  "createdAt": "2024-01-15T10:30:00Z",
+  "updatedAt": "2024-01-15T10:30:00Z"
+}
+```
 
 #### PRIVATEVIDEO#ID Items
+
+Stores private video metadata (only visible to creator).
 
 **Key Structure:**
 
 - `PK`: `PRIVATEVIDEO#<videoId>`
-- `SK`: `METADATA` (or video-specific identifier)
+- `SK`: `METADATA`
+
+**Attributes:**
+
+- `title`: string (required)
+- `videoUrl`: string (required) - URL to the video
+- `thumbnailUrl`: string (required) - S3 URL to thumbnail image
+- `userId`: string (required) - Creator's Cognito sub
+- `createdAt`: timestamp (ISO 8601 string)
+- `updatedAt`: timestamp (ISO 8601 string)
+
+**Example Item:**
+
+```json
+{
+  "PK": "PRIVATEVIDEO#a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+  "SK": "METADATA",
+  "title": "Private Video",
+  "videoUrl": "https://www.youtube.com/watch?v=private",
+  "thumbnailUrl": "https://bucket.s3.amazonaws.com/thumbnails/xyz789.jpg",
+  "userId": "user-uuid-here",
+  "createdAt": "2024-01-15T10:30:00Z",
+  "updatedAt": "2024-01-15T10:30:00Z"
+}
+```
+
+#### PUBLICPLAYLIST#ID Items
+
+Stores public playlist metadata.
+
+**Key Structure:**
+
+- `PK`: `PUBLICPLAYLIST#<playlistId>`
+- `SK`: `METADATA`
+
+**Attributes:**
+
+- `title`: string (required)
+- `description`: string (optional)
+- `thumbnailUrl`: string (required) - S3 URL to thumbnail image
+- `userId`: string (required) - Creator's Cognito sub
+- `createdAt`: timestamp (ISO 8601 string)
+- `updatedAt`: timestamp (ISO 8601 string)
+
+**Example Item:**
+
+```json
+{
+  "PK": "PUBLICPLAYLIST#a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+  "SK": "METADATA",
+  "title": "Example Playlist",
+  "description": "A collection of videos",
+  "thumbnailUrl": "https://bucket.s3.amazonaws.com/thumbnails/playlist123.jpg",
+  "userId": "user-uuid-here",
+  "createdAt": "2024-01-15T10:30:00Z",
+  "updatedAt": "2024-01-15T10:30:00Z"
+}
+```
+
+#### PRIVATEPLAYLIST#ID Items
+
+Stores private playlist metadata (only visible to creator).
+
+**Key Structure:**
+
+- `PK`: `PRIVATEPLAYLIST#<playlistId>`
+- `SK`: `METADATA`
+
+**Attributes:**
+
+- `title`: string (required)
+- `description`: string (optional)
+- `thumbnailUrl`: string (required) - S3 URL to thumbnail image
+- `userId`: string (required) - Creator's Cognito sub
+- `createdAt`: timestamp (ISO 8601 string)
+- `updatedAt`: timestamp (ISO 8601 string)
+
+**Example Item:**
+
+```json
+{
+  "PK": "PRIVATEPLAYLIST#a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+  "SK": "METADATA",
+  "title": "Private Playlist",
+  "description": "My personal collection",
+  "thumbnailUrl": "https://bucket.s3.amazonaws.com/thumbnails/private456.jpg",
+  "userId": "user-uuid-here",
+  "createdAt": "2024-01-15T10:30:00Z",
+  "updatedAt": "2024-01-15T10:30:00Z"
+}
+```
 
 ## Access Patterns
 
@@ -67,6 +183,10 @@ Stores user profile information.
 1. **Get User Profile**: Query by `PK = USER#<userId>` and `SK = PROFILE`
 2. **Create/Update User Profile**: PutItem with `PK = USER#<userId>` and `SK = PROFILE`
 3. **Check Username Uniqueness**: Query GSI `Username` by `username = <username>` to find existing profiles
+4. **Get Public Videos**: Scan with filter `PK begins_with PUBLICVIDEO#` (can optimize with GSI later)
+5. **Get Public Playlists**: Scan with filter `PK begins_with PUBLICPLAYLIST#` (can optimize with GSI later)
+6. **Get Video by ID**: GetItem with `PK = PUBLICVIDEO#<videoId>` or `PRIVATEVIDEO#<videoId>` and `SK = METADATA`
+7. **Get Playlist by ID**: GetItem with `PK = PUBLICPLAYLIST#<playlistId>` or `PRIVATEPLAYLIST#<playlistId>` and `SK = METADATA`
 
 ### Global Secondary Indexes (GSI)
 
