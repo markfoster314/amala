@@ -1,0 +1,27 @@
+# Testing
+coverage
+test-results
+**/*.test.ts
+**/*.test.tsx
+**/*.spec.ts
+**/*.spec.tsx
+.vitest
+
+# Source maps in production (optional - remove if you want them)
+*.map
+
+# Dev files
+vite.config.ts.timestamp-*
+.eslintcache
+
+# Local development files
+.env.local
+.env.development.local
+
+# IDE
+.vscode
+.idea
+
+# OS
+.DS_Store
+Thumbs.db

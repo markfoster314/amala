@@ -1,0 +1,32 @@
+# Testing
+coverage
+**/*.test.ts
+**/*.spec.ts
+
+# Dev files (not needed in production container)
+tsconfig.json
+eslint.config.js
+.eslintcache
+
+# Source maps (optional - can keep for debugging in production)
+*.map
+
+# Local development files
+.env.local
+.env.development.local
+.env.test.local
+
+# IDE
+.vscode
+.idea
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Documentation
+*.md
+!README.md

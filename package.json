@@ -34,7 +34,13 @@
     "validate": "pnpm lint && pnpm type-check && pnpm format:check",
     "clean": "turbo run clean && rm -rf node_modules",
     "clean:cache": "rm -rf .turbo",
-    "clean:all": "pnpm clean:cache && pnpm clean"
+    "clean:all": "pnpm clean:cache && pnpm clean",
+    "docker:build": "docker-compose build",
+    "docker:up": "docker-compose up -d",
+    "docker:down": "docker-compose down",
+    "docker:logs": "docker-compose logs -f",
+    "docker:clean": "docker-compose down -v --rmi all",
+    "docker:dev": "docker-compose up"
   },
   "devDependencies": {
     "@commitlint/cli": "^20.2.0",

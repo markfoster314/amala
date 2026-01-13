@@ -1,0 +1,60 @@
+services:
+  frontend:
+    build:
+      context: .
+      dockerfile: apps/frontend/Dockerfile
+      args:
+        - VITE_API_URL=${VITE_API_URL:-http://localhost:3001}
+        - VITE_AWS_COGNITO_USER_POOL_ID=${COGNITO_USER_POOL_ID}
+        - VITE_AWS_COGNITO_CLIENT_ID=${COGNITO_CLIENT_ID}
+        - VITE_AWS_REGION=${AWS_REGION}
+    container_name: amala-frontend
+    ports:
+      - '3000:80'
+    environment:
+      - NODE_ENV=production
+      # Frontend env vars should be set at build time
+    depends_on:
+      - backend
+    networks:
+      - amala-network
+    restart: unless-stopped
+
+  backend:
+    build:
+      context: .
+      dockerfile: apps/backend/Dockerfile
+    container_name: amala-backend
+    ports:
+      - '3001:3001'
+    environment:
+      - NODE_ENV=production
+      - PORT=3001
+      # Add your environment variables here or use .env file
+      - AWS_REGION=${AWS_REGION}
+      - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
+      - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
+      - AWS_S3_THUMBNAILS_BUCKET=${AWS_S3_THUMBNAILS_BUCKET}
+      - COGNITO_USER_POOL_ID=${COGNITO_USER_POOL_ID}
+      - COGNITO_CLIENT_ID=${COGNITO_CLIENT_ID}
+      - DYNAMODB_TABLE_NAME=${DYNAMODB_TABLE_NAME}
+
+    networks:
+      - amala-network
+    restart: unless-stopped
+    healthcheck:
+      test:
+        [
+          'CMD',
+          'node',
+          '-e',
+          "require('http').get('http://localhost:3001/health', (r) => {process.exit(r.statusCode === 200 ? 0 : 1)})",
+        ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+networks:
+  amala-network:
+    driver: bridge

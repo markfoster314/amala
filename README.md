@@ -56,6 +56,7 @@ Coming soon: The Amala Foundation will offer server setup services at cost. Dona
 - **Code Quality**: ESLint, Prettier, Commitlint
 - **Git Hooks**: Husky, lint-staged
 - **Infrastructure**: AWS (for managed hosting option)
+- **Containerization**: Docker, Docker Compose
 
 ## Getting Started
 
@@ -63,6 +64,7 @@ Coming soon: The Amala Foundation will offer server setup services at cost. Dona
 
 - Node.js >= 20.0.0
 - pnpm >= 8.0.0
+- Docker and Docker Compose (for production builds)
 
 ### Installation
 
@@ -76,6 +78,49 @@ pnpm dev
 # Build for production
 pnpm build
 ```
+
+## Environment Variables
+
+Amala requires environment variables for configuration. Copy `.env.example` to `.env` and fill in your values:
+
+```bash
+cp .env.example .env
+```
+
+### Required Environment Variables
+
+Edit the `.env` file with your configuration:
+
+```bash
+# Backend Configuration
+NODE_ENV=production
+PORT=3001
+
+# AWS Configuration
+AWS_REGION=us-east-1
+AWS_ACCESS_KEY_ID=your-access-key-id
+AWS_SECRET_ACCESS_KEY=your-secret-access-key
+
+# DynamoDB Configuration
+DYNAMODB_TABLE_NAME=amala-data
+
+# S3 Configuration
+AWS_S3_THUMBNAILS_BUCKET=amala-thumbnails
+
+# Cognito Configuration
+COGNITO_USER_POOL_ID=us-east-1_XXXXXXXXX
+COGNITO_CLIENT_ID=your-client-id
+
+# Frontend Configuration (for Docker builds)
+VITE_API_URL=http://localhost:3001
+```
+
+**Important Notes:**
+
+- Never commit your `.env` file to version control (it's already in `.gitignore`)
+- The `.env.example` file serves as a template showing all required variables
+- For Docker production builds, frontend environment variables are embedded at build time
+- Ensure all AWS credentials and Cognito configuration are correctly set before building
 
 ## Project Structure
 
@@ -119,10 +164,109 @@ pnpm validate
 
 ## Building for Production
 
+### Local Build
+
 ```bash
 # Build all applications
 pnpm build
 ```
+
+### Docker Production Builds
+
+Amala includes Docker configuration for building and running production-ready containers. This is the recommended approach for deployment.
+
+#### Prerequisites
+
+- Docker and Docker Compose installed
+- Environment variables configured (see [Environment Variables](#environment-variables) section)
+- `.env` file created with all required variables
+
+#### Building Docker Images
+
+```bash
+# Build both frontend and backend images
+docker-compose build
+
+# Or using npm script
+pnpm docker:build
+```
+
+#### Running with Docker
+
+```bash
+# Start all services in detached mode
+docker-compose up -d
+
+# Or using npm script
+pnpm docker:up
+
+# View logs
+docker-compose logs -f
+
+# Or using npm script
+pnpm docker:logs
+
+# Stop services
+docker-compose down
+
+# Or using npm script
+pnpm docker:down
+```
+
+#### Docker Commands
+
+```bash
+# Build images
+pnpm docker:build          # Build all images
+docker-compose build       # Alternative
+
+# Start services
+pnpm docker:up            # Start in detached mode
+pnpm docker:dev           # Start in foreground (see logs)
+docker-compose up -d      # Alternative
+
+# Stop services
+pnpm docker:down          # Stop services
+docker-compose down       # Alternative
+
+# View logs
+pnpm docker:logs          # Follow logs
+docker-compose logs -f    # Alternative
+
+# Cleanup
+pnpm docker:clean         # Stop and remove all containers, volumes, and images
+```
+
+#### Docker Services
+
+When running with Docker Compose, the following services are available:
+
+- **Frontend**: Available at `http://localhost:3000`
+  - Production build served by nginx
+  - Environment variables embedded at build time
+- **Backend**: Available at `http://localhost:3001`
+  - Production build running Node.js
+  - Health check endpoint: `http://localhost:3001/health`
+
+#### Testing Docker Build
+
+```bash
+# Build and start services
+docker-compose build
+docker-compose up -d
+
+# Test backend health
+curl http://localhost:3001/health
+
+# Test frontend
+curl http://localhost:3000
+
+# View logs for troubleshooting
+docker-compose logs backend
+docker-compose logs frontend
+```
+
+**Note:** For development, it's recommended to use `pnpm dev` for faster iteration with hot reload. Docker builds are optimized for production deployment and testing.
 
 ## Contributing
 
