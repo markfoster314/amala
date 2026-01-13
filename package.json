@@ -22,7 +22,11 @@
   "scripts": {
     "prepare": "husky",
     "dev": "turbo run dev",
+    "dev:frontend": "pnpm --filter @amala/frontend dev",
+    "dev:backend": "pnpm --filter @amala/backend dev",
     "build": "turbo run build",
+    "build:frontend": "pnpm --filter @amala/frontend build",
+    "build:backend": "pnpm --filter @amala/backend build",
     "preview": "turbo run preview",
     "lint": "turbo run lint",
     "lint:fix": "turbo run lint -- --fix",
