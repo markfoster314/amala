@@ -437,6 +437,7 @@ sudo ufw allow 'Nginx Full'
 ### PM2 Logs
 
 PM2 automatically logs to:
+
 - `~/.pm2/logs/amala-backend-out.log` - Standard output
 - `~/.pm2/logs/amala-backend-error.log` - Standard error
 
@@ -461,16 +462,19 @@ done
 ### Application won't start
 
 1. Check environment variables:
+
    ```bash
    cat .env
    ```
 
 2. Check logs:
+
    ```bash
    pm2 logs amala-backend
    ```
 
 3. Verify Node.js version:
+
    ```bash
    node --version
    ```
@@ -500,6 +504,7 @@ done
 ### Permission denied errors
 
 1. Check file permissions:
+
    ```bash
    ls -la /opt/amala/apps/backend
    ```

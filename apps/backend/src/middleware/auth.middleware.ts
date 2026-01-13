@@ -50,7 +50,9 @@ export async function authenticateToken(
 ): Promise<void> {
   try {
     const authHeader = req.headers['authorization'];
-    const token = authHeader?.startsWith('Bearer ') ? authHeader.substring(7) : null;
+    const token = authHeader?.startsWith('Bearer ')
+      ? authHeader.substring(7)
+      : null;
 
     if (!token) {
       throw new UnauthorizedError('No token provided');
@@ -75,7 +77,11 @@ export async function authenticateToken(
         }
 
         req.userId = decoded.sub as string;
-        req.user = decoded as { sub: string; email?: string; [key: string]: unknown };
+        req.user = decoded as {
+          sub: string;
+          email?: string;
+          [key: string]: unknown;
+        };
         next();
       }
     );

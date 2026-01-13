@@ -107,13 +107,16 @@ export default function Dashboard() {
           ))}
         </div>
 
-        {!isLoading && videos.length === 0 && playlists.length === 0 && !error && (
-          <Box className="dashboard-empty">
-            <Text preset={['secondaryDark']}>
-              No public videos or playlists available yet.
-            </Text>
-          </Box>
-        )}
+        {!isLoading &&
+          videos.length === 0 &&
+          playlists.length === 0 &&
+          !error && (
+            <Box className="dashboard-empty">
+              <Text preset={['secondaryDark']}>
+                No public videos or playlists available yet.
+              </Text>
+            </Box>
+          )}
       </div>
     </div>
   );

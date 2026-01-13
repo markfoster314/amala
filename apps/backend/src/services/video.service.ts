@@ -1,7 +1,11 @@
 import { docClient, TABLE_NAME } from './dynamodb.service';
 import { GetCommand, PutCommand, ScanCommand } from '@aws-sdk/lib-dynamodb';
 import type { Video, VideoInput, VideoResponse } from '../types/video.types';
-import { NotFoundError, ValidationError, ForbiddenError } from '../utils/errors';
+import {
+  NotFoundError,
+  ValidationError,
+  ForbiddenError,
+} from '../utils/errors';
 import { randomUUID } from 'crypto';
 
 function createPublicPK(videoId: string): string {
@@ -23,13 +27,25 @@ function parseVideoId(pk: string): string {
 }
 
 function validateVideoInput(input: VideoInput): void {
-  if (!input.title || typeof input.title !== 'string' || input.title.trim().length === 0) {
+  if (
+    !input.title ||
+    typeof input.title !== 'string' ||
+    input.title.trim().length === 0
+  ) {
     throw new ValidationError('Title is required');
   }
-  if (!input.videoUrl || typeof input.videoUrl !== 'string' || input.videoUrl.trim().length === 0) {
+  if (
+    !input.videoUrl ||
+    typeof input.videoUrl !== 'string' ||
+    input.videoUrl.trim().length === 0
+  ) {
     throw new ValidationError('Video URL is required');
   }
-  if (!input.thumbnailUrl || typeof input.thumbnailUrl !== 'string' || input.thumbnailUrl.trim().length === 0) {
+  if (
+    !input.thumbnailUrl ||
+    typeof input.thumbnailUrl !== 'string' ||
+    input.thumbnailUrl.trim().length === 0
+  ) {
     throw new ValidationError('Thumbnail URL is required');
   }
 }
@@ -41,7 +57,9 @@ export async function createVideo(
   validateVideoInput(videoData);
 
   const videoId = randomUUID();
-  const pk = videoData.isPublic ? createPublicPK(videoId) : createPrivatePK(videoId);
+  const pk = videoData.isPublic
+    ? createPublicPK(videoId)
+    : createPrivatePK(videoId);
   const now = new Date().toISOString();
 
   const video: Video = {

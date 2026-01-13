@@ -29,7 +29,9 @@ const upload = multer({
   },
 });
 
-export const uploadThumbnailMiddleware: RequestHandler = upload.single('thumbnail') as unknown as RequestHandler;
+export const uploadThumbnailMiddleware: RequestHandler = upload.single(
+  'thumbnail'
+) as unknown as RequestHandler;
 
 export async function createPlaylist(
   req: PlaylistRequest,

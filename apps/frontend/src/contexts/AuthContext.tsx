@@ -160,7 +160,10 @@ export function AuthProvider({ children }: AuthProviderProps) {
               // Profile exists, nothing to do
             } catch (profileError) {
               // Profile doesn't exist (404) or other error
-              if (profileError instanceof ApiError && profileError.statusCode === 404) {
+              if (
+                profileError instanceof ApiError &&
+                profileError.statusCode === 404
+              ) {
                 // Extract username from email (part before @)
                 const usernameFromEmail = email.split('@')[0] ?? email;
                 const displaynameFromEmail = email;
@@ -179,7 +182,10 @@ export function AuthProvider({ children }: AuthProviderProps) {
         } catch (_profileErr) {
           // Silently fail profile creation/check - don't block authentication
           // eslint-disable-next-line no-console
-          console.warn('Failed to check/create profile after sign-in:', _profileErr);
+          console.warn(
+            'Failed to check/create profile after sign-in:',
+            _profileErr
+          );
         }
       }
     } catch (err) {

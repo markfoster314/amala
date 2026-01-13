@@ -13,7 +13,7 @@ export function createApp(): express.Application {
   app.use(cors());
   app.use(express.json());
   app.use(express.urlencoded({ extended: true }));
-  
+
   // Request logging (before routes)
   app.use(requestLogger);
 
@@ -28,44 +28,49 @@ export function createApp(): express.Application {
   app.use('/api/playlist', playlistRoutes);
 
   // Error handling middleware
-  app.use((err: Error, req: express.Request, res: express.Response, _next: express.NextFunction): void => {
-    if (err instanceof AppError) {
-      console.error(
-        `[${new Date().toISOString()}] Error: ${err.code} - ${err.message}`,
-        {
-          statusCode: err.statusCode,
-          path: req.originalUrl || req.url,
-          method: req.method,
-          stack: process.env['NODE_ENV'] === 'development' ? err.stack : undefined,
-        }
-      );
-      res.status(err.statusCode).json({
-        error: {
-          message: err.message,
-          code: err.code,
-        },
-      });
-      return;
-    }
+  app.use(
+    (
+      err: Error,
+      req: express.Request,
+      res: express.Response,
+      _next: express.NextFunction
+    ): void => {
+      if (err instanceof AppError) {
+        console.error(
+          `[${new Date().toISOString()}] Error: ${err.code} - ${err.message}`,
+          {
+            statusCode: err.statusCode,
+            path: req.originalUrl || req.url,
+            method: req.method,
+            stack:
+              process.env['NODE_ENV'] === 'development' ? err.stack : undefined,
+          }
+        );
+        res.status(err.statusCode).json({
+          error: {
+            message: err.message,
+            code: err.code,
+          },
+        });
+        return;
+      }
 
-    // Unexpected errors
-    console.error(
-      `[${new Date().toISOString()}] Unexpected error:`,
-      {
+      // Unexpected errors
+      console.error(`[${new Date().toISOString()}] Unexpected error:`, {
         message: err.message,
         name: err.name,
         path: req.originalUrl || req.url,
         method: req.method,
         stack: err.stack,
-      }
-    );
-    res.status(500).json({
-      error: {
-        message: 'Internal server error',
-        code: 'INTERNAL_SERVER_ERROR',
-      },
-    });
-  });
+      });
+      res.status(500).json({
+        error: {
+          message: 'Internal server error',
+          code: 'INTERNAL_SERVER_ERROR',
+        },
+      });
+    }
+  );
 
   // 404 handler
   app.use((_req, res) => {
