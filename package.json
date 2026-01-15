@@ -72,6 +72,10 @@
       "cd apps/frontend && eslint --fix",
       "prettier --write"
     ],
+    "apps/backend/**/*.{ts,js}": [
+      "cd apps/backend && eslint --fix",
+      "prettier --write"
+    ],
     "*.{ts,tsx,js,jsx}": [
       "eslint --fix",
       "prettier --write"

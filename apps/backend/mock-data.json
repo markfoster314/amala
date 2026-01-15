@@ -1,0 +1,21 @@
+[
+  {
+    "PK": "USER#74e89408-7021-703a-5704-ff8d68b5e54f",
+    "SK": "PROFILE",
+    "username": "testuser",
+    "displayname": "Test User",
+    "description": "A test user profile",
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2024-01-01T00:00:00.000Z"
+  },
+  {
+    "PK": "PUBLICVIDEO#03eb29c2-e4b4-4af1-9609-51ca5623d1b1",
+    "SK": "METADATA",
+    "title": "Whiplash (2014)",
+    "videoUrl": "https://d1lcvj6peyngtp.cloudfront.net/Whiplash.mp4",
+    "thumbnailUrl": "https://amala-thumbnails.s3.us-east-1.amazonaws.com/thumbnails/783a6a65-ed39-424a-9a45-e177142b3797.jpeg",
+    "userId": "74e89408-7021-703a-5704-ff8d68b5e54f",
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2024-01-01T00:00:00.000Z"
+  }
+]
